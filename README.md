@@ -1,5 +1,5 @@
 #QREader
-A library that will simplify the QR code reading process using google's mobile vision api
+A library that uses google's mobile vision api and simplify the QR code reading process 
 
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
