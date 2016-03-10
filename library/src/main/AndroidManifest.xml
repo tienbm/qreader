@@ -5,11 +5,7 @@
     <!-- Required permission for reading -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <application
-        android:allowBackup="true"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        >
+    <application>
 
         <!-- Add this to enable bar code reader -->
         <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode"/>

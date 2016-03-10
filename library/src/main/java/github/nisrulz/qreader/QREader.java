@@ -22,7 +22,7 @@ public class QREader {
     private static BarcodeDetector barcodeDetector;
     private static CameraSource cameraSource;
 
-    public static void start(final Context context, final SurfaceView cameraView, final QRDataListener QRDataListener) {
+    public static void start(final Context context, final SurfaceView surfaceView, final QRDataListener QRDataListener) {
         barcodeDetector =
                 new BarcodeDetector.Builder(context)
                         .setBarcodeFormats(Barcode.QR_CODE)
@@ -33,11 +33,11 @@ public class QREader {
                 .setRequestedPreviewSize(800, 800)
                 .build();
 
-        cameraView.getHolder()
+        surfaceView.getHolder()
                 .addCallback(new SurfaceHolder.Callback() {
                     @Override
                     public void surfaceCreated(SurfaceHolder holder) {
-                        startCameraView(context, cameraSource, cameraView);
+                        startCameraView(context, cameraSource, surfaceView);
                     }
 
                     @Override
@@ -46,7 +46,7 @@ public class QREader {
 
                     @Override
                     public void surfaceDestroyed(SurfaceHolder holder) {
-                        startCameraView(context, cameraSource, cameraView);
+                        startCameraView(context, cameraSource, surfaceView);
                     }
                 });
 
@@ -68,11 +68,11 @@ public class QREader {
     }
 
     private static void startCameraView(Context context, CameraSource cameraSource, SurfaceView
-            cameraView) {
+            surfaceView) {
         try {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
-                cameraSource.start(cameraView.getHolder());
+                cameraSource.start(surfaceView.getHolder());
             } else {
                 Log.e(TAG, "Permission not granted!");
             }
