@@ -1,4 +1,5 @@
-#QREader
+#QREader    [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader) 
+
 A library that uses google's mobile vision api and simplify the QR code reading process 
 
 #Integration
