@@ -23,11 +23,12 @@ SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
 ```
 
 + Next setup the config
-    1. The default config uses autofocus, back camera and preview size set at 800x800 and is called as
+    + The default config uses autofocus, back camera and preview size set at 800x800 and is referenced as below
     ```java
     QREader.getInstance().setUpConfig();
     ```
-    1. There are other config methods to give you more granular configurations
+    
+    + There are other config methods to give you more granular configurations
     ```java
     // Disable/Enable autofocus
     // Choose between Front facing or Back facing camera | Possible arguments : CameraSource.CAMERA_FACING_BACK /  CameraSource.CAMERA_FACING_FRONT
