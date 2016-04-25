@@ -38,7 +38,7 @@ SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
     ```   
 
 
-+ Lastly call `QREader.start()` with required arguments in your Activity code, to start reading 
++ Lastly call `QREader.getInstance().start()` with required arguments in your Activity code, to start reading 
 QR code.
 ```java
 QREader.getInstance().start(this, surfaceView, new QRDataListener() {
