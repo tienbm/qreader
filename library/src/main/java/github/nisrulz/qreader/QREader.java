@@ -34,11 +34,45 @@ import java.io.IOException;
 
 public class QREader {
 
-    private static final String TAG = "QREader";
-    private static BarcodeDetector barcodeDetector;
-    private static CameraSource cameraSource;
+    private final String TAG = "QREader";
+    private BarcodeDetector barcodeDetector;
+    private CameraSource cameraSource;
 
-    public static void start(final Context context, final SurfaceView surfaceView, final QRDataListener QRDataListener) {
+    private boolean autofocus_enabled;
+    private int width;
+    private int height;
+    private int facing;
+
+    private static QREader INSTANCE;
+
+    private QREader() {
+
+    }
+
+    public static QREader getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new QREader();
+        }
+        return INSTANCE;
+    }
+
+    public void setUpConfig() {
+        setUpConfig(true, 800, 800, CameraSource.CAMERA_FACING_BACK);
+    }
+
+    public void setUpConfig(boolean autofocus_enabled, int facing) {
+        setUpConfig(autofocus_enabled, 800, 800, facing);
+    }
+
+    public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing) {
+        this.autofocus_enabled = autofocus_enabled;
+        this.width = width;
+        this.height = height;
+        this.facing = facing;
+    }
+
+
+    public void start(final Context context, final SurfaceView surfaceView, final QRDataListener QRDataListener) {
         barcodeDetector =
                 new BarcodeDetector.Builder(context)
                         .setBarcodeFormats(Barcode.QR_CODE)
@@ -46,7 +80,9 @@ public class QREader {
 
         cameraSource = new CameraSource
                 .Builder(context, barcodeDetector)
-                .setRequestedPreviewSize(800, 800)
+                .setAutoFocusEnabled(autofocus_enabled)
+                .setFacing(facing)
+                .setRequestedPreviewSize(width, height)
                 .build();
 
         surfaceView.getHolder()
@@ -83,7 +119,7 @@ public class QREader {
 
     }
 
-    private static void startCameraView(Context context, CameraSource cameraSource, SurfaceView
+    private void startCameraView(Context context, CameraSource cameraSource, SurfaceView
             surfaceView) {
         try {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)

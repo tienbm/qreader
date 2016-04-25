@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         surfaceView = (SurfaceView) findViewById(R.id.camera_view);
         textView_qrcode_info = (TextView) findViewById(R.id.code_info);
 
-        QREader.start(this, surfaceView, new QRDataListener() {
+        QREader.getInstance().setUpConfig();
+        QREader.getInstance().start(this, surfaceView, new QRDataListener() {
             @Override
             public void onDetected(final String data) {
                 Log.d("QREader", "Value : " + data);

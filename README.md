@@ -5,7 +5,7 @@ A library that uses google's mobile vision api and simplify the QR code reading 
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
 ```gradle
-compile 'com.github.nisrulz:qreader:1.0.0'
+compile 'com.github.nisrulz:qreader:1.0.1'
 ```
 
 #Usage
@@ -22,10 +22,25 @@ compile 'com.github.nisrulz:qreader:1.0.0'
 SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
 ```
 
++ Next setup the config
+    1. The default config uses autofocus, back camera and preview size set at 800x800 and is called as
+    ```java
+    QREader.getInstance().setUpConfig();
+    ```
+    1. There are other config methods to give you more granular configurations
+    ```java
+    // Disable/Enable autofocus
+    // Choose between Front facing or Back facing camera | Possible arguments : CameraSource.CAMERA_FACING_BACK /  CameraSource.CAMERA_FACING_FRONT
+    QREader.getInstance().setUpConfig(boolean autofocus_enabled, int facing);
+    // Change all the config values
+    QREader.getInstance().setUpConfig(boolean autofocus_enabled, int width, int height, int facing);
+    ```   
+
+
 + Lastly call `QREader.start()` with required arguments in your Activity code, to start reading 
 QR code.
 ```java
-QREader.start(this, surfaceView, new QRDataListener() {
+QREader.getInstance().start(this, surfaceView, new QRDataListener() {
         @Override
         public void onDetected(final String data) {
             Log.d("QREader", "Value : " + data);
