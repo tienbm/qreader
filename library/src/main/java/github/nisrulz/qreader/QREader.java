@@ -32,9 +32,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+/**
+ * QrEader Singleton
+ */
 public class QREader {
 
-    public static final String TAG = "QREader";
+    private static final String TAG = "QREader";
     private CameraSource cameraSource = null;
     private BarcodeDetector barcodeDetector = null;
 
@@ -51,6 +54,11 @@ public class QREader {
 
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static QREader getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new QREader();
@@ -58,14 +66,35 @@ public class QREader {
         return INSTANCE;
     }
 
+    /**
+     * Sets up config.
+     *
+     * @param qrDataListener the qr data listener
+     */
     public void setUpConfig(final QRDataListener qrDataListener) {
         setUpConfig(true, 800, 800, CameraSource.CAMERA_FACING_BACK, qrDataListener);
     }
 
+    /**
+     * Sets up config.
+     *
+     * @param autofocus_enabled the autofocus enabled
+     * @param facing            the facing
+     * @param qrDataListener    the qr data listener
+     */
     public void setUpConfig(boolean autofocus_enabled, int facing, final QRDataListener qrDataListener) {
         setUpConfig(autofocus_enabled, 800, 800, facing, qrDataListener);
     }
 
+    /**
+     * Sets up config.
+     *
+     * @param autofocus_enabled the autofocus enabled
+     * @param width             the width
+     * @param height            the height
+     * @param facing            the facing
+     * @param qrDataListener    the qr data listener
+     */
     public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing, final QRDataListener qrDataListener) {
         this.autofocus_enabled = autofocus_enabled;
         this.width = width;
@@ -75,6 +104,12 @@ public class QREader {
     }
 
 
+    /**
+     * Start.
+     *
+     * @param context     the context
+     * @param surfaceView the surface view
+     */
     public void start(final Context context, final SurfaceView surfaceView) {
         if (barcodeDetector == null)
             barcodeDetector = new BarcodeDetector.Builder(context)
@@ -138,8 +173,6 @@ public class QREader {
             } else {
                 if (!cameraRunning && cameraSource != null) {
                     cameraSource.start(surfaceView.getHolder());
-
-                    System.out.println("Camera started");
                     cameraRunning = true;
                 }
             }
@@ -150,6 +183,9 @@ public class QREader {
         }
     }
 
+    /**
+     * Stop QREader and cleanup.
+     */
     public void stopQREaderAndCleanup() {
         try {
             if (cameraRunning && cameraSource != null) {
@@ -157,8 +193,6 @@ public class QREader {
                 cameraSource.release();
                 cameraRunning = false;
                 cameraSource = null;
-
-                System.out.println("Camera released");
             }
 
             if (barcodeDetector != null) {
