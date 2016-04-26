@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Qreader by nisrulz</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Qreader</h1>
+        <p>A library that uses google&#39;s mobile vision api and simplify the QR code reading process</p>
+
+        <p class="view"><a href="https://github.com/nisrulz/qreader">View the Project on GitHub <small>nisrulz/qreader</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/nisrulz/qreader/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/nisrulz/qreader/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/nisrulz/qreader">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="qreader-----" class="anchor" href="#qreader-----" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>QREader    <a href="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader"><img src="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg" alt="Maven Central"></a> <a href="https://android-arsenal.com/details/1/3478"><img src="https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true" alt="Android Arsenal"></a>
+</h1>
+
+<p>A library that uses google's mobile vision api and simplify the QR code reading process </p>
+
+<h1>
+<a id="integration" class="anchor" href="#integration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integration</h1>
+
+<ul>
+<li>QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency</li>
+</ul>
+
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.github.nisrulz:qreader:1.0.1<span class="pl-pds">'</span></span></pre></div>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
+
+<ul>
+<li>First add a <code>SurfaceView</code> to your layout and give it an id</li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">&lt;</span><span class="pl-smi">SurfaceView</span>
+        android<span class="pl-k">:</span>id<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>@+id/camera_view<span class="pl-pds">"</span></span>
+        android<span class="pl-k">:</span>layout_width<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>320dp<span class="pl-pds">"</span></span>
+        android<span class="pl-k">:</span>layout_height<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>320dp<span class="pl-pds">"</span></span><span class="pl-k">/</span><span class="pl-k">&gt;</span></pre></div>
+
+<ul>
+<li>Then in your Activity code reference the <code>SurfaceView</code>
+</li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">SurfaceView</span> surfaceView <span class="pl-k">=</span> (<span class="pl-smi">SurfaceView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>camera_view);</pre></div>
+
+<ul>
+<li>
+<p>Next setup the config</p>
+
+<ul>
+<li>The default config uses autofocus, back camera and preview size set at 800x800 and is referenced as below</li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>setUpConfig();</pre></div>
+
+<ul>
+<li>There are other config methods to give you more granular configurations</li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Disable/Enable autofocus</span>
+<span class="pl-c">// Choose between Front facing or Back facing camera | Possible arguments : CameraSource.CAMERA_FACING_BACK /  CameraSource.CAMERA_FACING_FRONT</span>
+<span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>setUpConfig(<span class="pl-k">boolean</span> autofocus_enabled, <span class="pl-k">int</span> facing);
+<span class="pl-c">// Change all the config values</span>
+<span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>setUpConfig(<span class="pl-k">boolean</span> autofocus_enabled, <span class="pl-k">int</span> width, <span class="pl-k">int</span> height, <span class="pl-k">int</span> facing);</pre></div>
+</li>
+<li><p>Lastly call <code>QREader.getInstance().start()</code> with required arguments in your Activity code, to start reading 
+QR code.</p></li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>start(<span class="pl-v">this</span>, surfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
+        <span class="pl-k">@Override</span>
+        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
+            <span class="pl-smi">Log</span><span class="pl-k">.</span>d(<span class="pl-s"><span class="pl-pds">"</span>QREader<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Value : <span class="pl-pds">"</span></span> <span class="pl-k">+</span> data);
+        }
+    });</pre></div>
+
+<p><em>where</em></p>
+
+<table>
+<thead>
+<tr>
+<th>argument</th>
+<th>type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>this</td>
+<td><code>Context</code></td>
+</tr>
+<tr>
+<td>surfaceView</td>
+<td><code>SurfaceView</code></td>
+</tr>
+<tr>
+<td>new QRDataListener()</td>
+<td><code>QRDataListener</code></td>
+</tr>
+</tbody>
+</table>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
+
+<pre><code>Copyright 2016 Nishant Srivastava
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/nisrulz">nisrulz</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
