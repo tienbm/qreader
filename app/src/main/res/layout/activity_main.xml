@@ -31,7 +31,7 @@
             android:id="@+id/code_info"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Point the camera view to a QR Code to read the information"
             android:textSize="20sp"/>

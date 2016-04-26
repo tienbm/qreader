@@ -5,7 +5,7 @@ A library that uses google's mobile vision api and simplify the QR code reading 
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
 ```gradle
-compile 'com.github.nisrulz:qreader:1.0.1'
+compile 'com.github.nisrulz:qreader:1.0.2'
 ```
 
 #Usage
@@ -22,31 +22,38 @@ compile 'com.github.nisrulz:qreader:1.0.1'
 SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
 ```
 
-+ Next setup the config
++ Next setup the config with `QRDataListener` as the last argument in any of the `setConfig()` calls
     + The default config uses autofocus, back camera and preview size set at 800x800 and is referenced as below
     ```java
-    QREader.getInstance().setUpConfig();
+    QREader.getInstance().setUpConfig(new QRDataListener() {
+            @Override
+            public void onDetected(final String data) {
+                Log.d("QREader", "Value : " + data);
+                
+                // Post data on UI Thread
+                textView_qrcode_info.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView_qrcode_info.setText(data);
+                    }
+                });
+            }
+        });
     ```
     
     + There are other config methods to give you more granular configurations
     ```java
     // Disable/Enable autofocus
     // Choose between Front facing or Back facing camera | Possible arguments : CameraSource.CAMERA_FACING_BACK /  CameraSource.CAMERA_FACING_FRONT
-    QREader.getInstance().setUpConfig(boolean autofocus_enabled, int facing);
+     public void setUpConfig(boolean autofocus_enabled, int facing, QRDataListener qrDataListener) {
     // Change all the config values
-    QREader.getInstance().setUpConfig(boolean autofocus_enabled, int width, int height, int facing);
+     public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing, QRDataListener qrDataListener) {
     ```   
 
 
-+ Lastly call `QREader.getInstance().start()` with required arguments in your Activity code, to start reading 
-QR code.
++ Call `QREader.getInstance().start()` with required arguments in your Activity code, to start reading QR code.
 ```java
-QREader.getInstance().start(this, surfaceView, new QRDataListener() {
-        @Override
-        public void onDetected(final String data) {
-            Log.d("QREader", "Value : " + data);
-        }
-    });
+QREader.getInstance().start(this, surfaceView);
 ```
 
 *where*
@@ -55,7 +62,24 @@ QREader.getInstance().start(this, surfaceView, new QRDataListener() {
 |---|---|
 |this|`Context`|
 |surfaceView|`SurfaceView`|
-|new QRDataListener()|`QRDataListener`|
+
+
++ Call `QREader.getInstance().stopQREaderAndCleanup()` to stop reading QR code and release cameraresource
+```java
+QREader.getInstance().stopQREaderAndCleanup();
+```
+
+
+> NOTE : The library uses `android.permission.CAMERA` permission implicitly. For Android 
+platforms Marshmallow and above you need to make sure the permission is requested during  
+runtime and granted for QREader to function.
+
+> NOTE : The `onDetected(final String data)` function call returns the data string on a different
+ thread, so in order for you to show the result on the main thread you need to use a handler. 
+ Checkout the sample app for the same.
+
+
+P.S : You can use this nice [QR Code generator](https://www.the-qrcode-generator.com/) to test.
 
 License
 =======

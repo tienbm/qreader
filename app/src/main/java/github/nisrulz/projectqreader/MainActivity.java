@@ -27,8 +27,8 @@ import github.nisrulz.qreader.QREader;
 
 public class MainActivity extends AppCompatActivity {
 
-    SurfaceView surfaceView;
-    TextView textView_qrcode_info;
+    private SurfaceView surfaceView;
+    private TextView textView_qrcode_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         surfaceView = (SurfaceView) findViewById(R.id.camera_view);
         textView_qrcode_info = (TextView) findViewById(R.id.code_info);
 
-        QREader.getInstance().setUpConfig();
-        QREader.getInstance().start(this, surfaceView, new QRDataListener() {
+        QREader.getInstance().setUpConfig(new QRDataListener() {
             @Override
             public void onDetected(final String data) {
                 Log.d("QREader", "Value : " + data);
@@ -51,5 +50,18 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        QREader.getInstance().start(this, surfaceView);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        QREader.getInstance().stopQREaderAndCleanup();
     }
 }
