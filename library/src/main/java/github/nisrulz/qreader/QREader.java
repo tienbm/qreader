@@ -24,12 +24,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-
 import java.io.IOException;
 
 /**
@@ -37,175 +35,175 @@ import java.io.IOException;
  */
 public class QREader {
 
-    private static final String TAG = "QREader";
-    private CameraSource cameraSource = null;
-    private BarcodeDetector barcodeDetector = null;
+  private static final String TAG = "QREader";
+  private CameraSource cameraSource = null;
+  private BarcodeDetector barcodeDetector = null;
 
-    private boolean autofocus_enabled;
-    private int width;
-    private int height;
-    private int facing;
-    private boolean cameraRunning = false;
-    private QRDataListener qrDataListener;
+  private boolean autofocus_enabled;
+  private int width;
+  private int height;
+  private int facing;
+  private boolean cameraRunning = false;
+  private QRDataListener qrDataListener;
+  private Context context;
+  private SurfaceView surfaceView;
 
-    private static QREader INSTANCE;
+  private static QREader INSTANCE;
 
-    private QREader() {
+  private QREader() {
 
+  }
+
+  /**
+   * Gets instance.
+   *
+   * @return the instance
+   */
+  public static QREader getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new QREader();
+    }
+    return INSTANCE;
+  }
+
+  /**
+   * Sets up config.
+   *
+   * @param qrDataListener the qr data listener
+   */
+  public void setUpConfig(final QRDataListener qrDataListener) {
+    setUpConfig(true, 800, 800, CameraSource.CAMERA_FACING_BACK, qrDataListener);
+  }
+
+  /**
+   * Sets up config.
+   *
+   * @param autofocus_enabled the autofocus enabled
+   * @param facing the facing
+   * @param qrDataListener the qr data listener
+   */
+  public void setUpConfig(boolean autofocus_enabled, int facing,
+      final QRDataListener qrDataListener) {
+    setUpConfig(autofocus_enabled, 800, 800, facing, qrDataListener);
+  }
+
+  /**
+   * Sets up config.
+   *
+   * @param autofocus_enabled the autofocus enabled
+   * @param width the width
+   * @param height the height
+   * @param facing the facing
+   * @param qrDataListener the qr data listener
+   */
+  public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing,
+      final QRDataListener qrDataListener) {
+    this.autofocus_enabled = autofocus_enabled;
+    this.width = width;
+    this.height = height;
+    this.facing = facing;
+    this.qrDataListener = qrDataListener;
+  }
+
+  /**
+   * Init.
+   *
+   * @param context the context
+   * @param surfaceView the surface view
+   */
+  public void init(final Context context, final SurfaceView surfaceView) {
+    this.context = context;
+    this.surfaceView = surfaceView;
+
+    if (barcodeDetector == null) {
+      barcodeDetector =
+          new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
     }
 
-    /**
-     * Gets instance.
-     *
-     * @return the instance
-     */
-    public static QREader getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new QREader();
-        }
-        return INSTANCE;
+    if (cameraSource == null) {
+      cameraSource =
+          new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autofocus_enabled)
+              .setFacing(facing)
+              .setRequestedPreviewSize(width, height)
+              .build();
+    }
+  }
+
+  /**
+   * Start.
+   */
+  public void start() {
+    surfaceView.getHolder().addCallback(surfaceHolderCallback);
+  }
+
+  private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
+    @Override public void surfaceCreated(SurfaceHolder surfaceHolder) {
+      startCameraView(context, cameraSource, surfaceView);
     }
 
-    /**
-     * Sets up config.
-     *
-     * @param qrDataListener the qr data listener
-     */
-    public void setUpConfig(final QRDataListener qrDataListener) {
-        setUpConfig(true, 800, 800, CameraSource.CAMERA_FACING_BACK, qrDataListener);
-    }
+    @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+      if (barcodeDetector.isOperational()) {
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+          @Override public void release() {
 
-    /**
-     * Sets up config.
-     *
-     * @param autofocus_enabled the autofocus enabled
-     * @param facing            the facing
-     * @param qrDataListener    the qr data listener
-     */
-    public void setUpConfig(boolean autofocus_enabled, int facing, final QRDataListener qrDataListener) {
-        setUpConfig(autofocus_enabled, 800, 800, facing, qrDataListener);
-    }
+          }
 
-    /**
-     * Sets up config.
-     *
-     * @param autofocus_enabled the autofocus enabled
-     * @param width             the width
-     * @param height            the height
-     * @param facing            the facing
-     * @param qrDataListener    the qr data listener
-     */
-    public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing, final QRDataListener qrDataListener) {
-        this.autofocus_enabled = autofocus_enabled;
-        this.width = width;
-        this.height = height;
-        this.facing = facing;
-        this.qrDataListener = qrDataListener;
-    }
-
-
-    /**
-     * Start.
-     *
-     * @param context     the context
-     * @param surfaceView the surface view
-     */
-    public void start(final Context context, final SurfaceView surfaceView) {
-        if (barcodeDetector == null)
-            barcodeDetector = new BarcodeDetector.Builder(context)
-                    .setBarcodeFormats(Barcode.QR_CODE)
-                    .build();
-
-        if (cameraSource == null)
-            cameraSource = new CameraSource
-                    .Builder(context, barcodeDetector)
-                    .setAutoFocusEnabled(autofocus_enabled)
-                    .setFacing(facing)
-                    .setRequestedPreviewSize(width, height)
-                    .build();
-
-        try {
-            surfaceView.getHolder()
-                    .addCallback(new SurfaceHolder.Callback() {
-                        @Override
-                        public void surfaceCreated(SurfaceHolder holder) {
-                            startCameraView(context, cameraSource, surfaceView);
-                        }
-
-                        @Override
-                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                        }
-
-                        @Override
-                        public void surfaceDestroyed(SurfaceHolder holder) {
-                            stopCamera();
-                        }
-                    });
-
-            if (barcodeDetector.isOperational()) {
-                barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-                    @Override
-                    public void release() {
-                    }
-
-                    @Override
-                    public void receiveDetections(Detector.Detections<Barcode> detections) {
-                        final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-
-                        if (barcodes.size() != 0 && qrDataListener != null) {
-                            qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
-                        }
-                    }
-                });
+          @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
+            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+            if (barcodes.size() != 0 && qrDataListener != null) {
+              qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
             }
-        } catch (Exception e) {
-            stopCamera();
-            releaseAndCleanupQREader();
-        }
-
+          }
+        });
+      }
     }
 
-    private void startCameraView(Context context, CameraSource cameraSource, SurfaceView surfaceView) {
-        try {
+    @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
 
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                Log.e(TAG, "Permission not granted!");
-                return;
-            } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
-                cameraSource.start(surfaceView.getHolder());
-                cameraRunning = true;
-            }
-
-        } catch (IOException ie) {
-            Log.e(TAG, ie.getMessage());
-            ie.printStackTrace();
-        }
     }
+  };
 
-    /**
-     * Stop camera
-     */
-    public void stopCamera() {
-        try {
-            if (cameraRunning && cameraSource != null) {
-                cameraSource.stop();
-                cameraRunning = false;
-            }
-        } catch (Exception ie) {
-            Log.e(TAG, ie.getMessage());
-            ie.printStackTrace();
-        }
-    }
+  private void startCameraView(Context context, CameraSource cameraSource,
+      SurfaceView surfaceView) {
+    try {
 
-    /**
-     * Release and cleanup qr eader.
-     */
-    public void releaseAndCleanupQREader() {
-        if (cameraSource != null) {
-            cameraSource.release();
-            cameraSource = null;
-        }
+      if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+          != PackageManager.PERMISSION_GRANTED) {
+        Log.e(TAG, "Permission not granted!");
+        return;
+      } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
+        cameraSource.start(surfaceView.getHolder());
+        cameraRunning = true;
+      }
+    } catch (IOException ie) {
+      Log.e(TAG, ie.getMessage());
+      ie.printStackTrace();
     }
+  }
+
+  /**
+   * Stop camera
+   */
+  public void stop() {
+    try {
+      if (cameraRunning && cameraSource != null) {
+        cameraSource.stop();
+        cameraRunning = false;
+      }
+    } catch (Exception ie) {
+      Log.e(TAG, ie.getMessage());
+      ie.printStackTrace();
+    }
+  }
+
+  /**
+   * Release and cleanup qr eader.
+   */
+  public void releaseAndCleanup() {
+    if (cameraSource != null) {
+      cameraSource.release();
+      cameraSource = null;
+    }
+  }
 }
 

@@ -20,70 +20,57 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SurfaceView surfaceView;
-    private TextView textView_qrcode_info;
-    private Button btn_toggle;
-    private boolean isRunning = false;
+  private SurfaceView surfaceView;
+  private TextView textView_qrcode_info;
+  private Button btn_toggle;
+  private boolean isRunning = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        surfaceView = (SurfaceView) findViewById(R.id.camera_view);
-        textView_qrcode_info = (TextView) findViewById(R.id.code_info);
+    surfaceView = (SurfaceView) findViewById(R.id.camera_view);
+    textView_qrcode_info = (TextView) findViewById(R.id.code_info);
 
-        QREader.getInstance().setUpConfig(new QRDataListener() {
-            @Override
-            public void onDetected(final String data) {
-                Log.d("QREader", "Value : " + data);
-                textView_qrcode_info.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView_qrcode_info.setText(data);
-                    }
-                });
-            }
+    QREader.getInstance().setUpConfig(new QRDataListener() {
+      @Override public void onDetected(final String data) {
+        Log.d("QREader", "Value : " + data);
+        textView_qrcode_info.post(new Runnable() {
+          @Override public void run() {
+            textView_qrcode_info.setText(data);
+          }
         });
+      }
+    });
 
-        btn_toggle = (Button) findViewById(R.id.btn_toggle);
-        btn_toggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRunning) {
-                    QREader.getInstance().stopCamera();
-                    isRunning = false;
-                } else {
-                    QREader.getInstance().start(MainActivity.this, surfaceView);
-                    isRunning = true;
-                }
-            }
-        });
-    }
+    QREader.getInstance().init(this, surfaceView);
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+  @Override protected void onResume() {
+    super.onResume();
 
-        QREader.getInstance().start(this, surfaceView);
-        isRunning = true;
-    }
+    QREader.getInstance().start();
+    isRunning = true;
+  }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+  @Override protected void onPause() {
+    super.onPause();
 
-        QREader.getInstance().releaseAndCleanupQREader();
-        isRunning = false;
+    QREader.getInstance().stop();
+    isRunning = false;
+  }
 
-    }
+  @Override protected void onDestroy() {
+    super.onDestroy();
+
+    QREader.getInstance().releaseAndCleanup();
+    isRunning = false;
+  }
 }
