@@ -33,7 +33,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 /**
- * QrEader Singleton
+ * QREader Singleton
  */
 public class QREader {
 
