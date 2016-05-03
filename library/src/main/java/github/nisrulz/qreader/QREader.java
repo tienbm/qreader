@@ -133,7 +133,9 @@ public class QREader {
    * Start.
    */
   public void start() {
-    surfaceView.getHolder().addCallback(surfaceHolderCallback);
+    if (surfaceView != null && surfaceHolderCallback != null) {
+      surfaceView.getHolder().addCallback(surfaceHolderCallback);
+    }
   }
 
   private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
@@ -186,6 +188,9 @@ public class QREader {
    */
   public void stop() {
     try {
+      if (surfaceView != null && surfaceHolderCallback != null) {
+        surfaceView.getHolder().removeCallback(surfaceHolderCallback);
+      }
       if (cameraRunning && cameraSource != null) {
         cameraSource.stop();
         cameraRunning = false;
@@ -200,6 +205,7 @@ public class QREader {
    * Release and cleanup qr eader.
    */
   public void releaseAndCleanup() {
+    stop();
     if (cameraSource != null) {
       cameraSource.release();
       cameraSource = null;
