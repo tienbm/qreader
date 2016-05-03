@@ -124,42 +124,44 @@ public class QREader {
                     .setRequestedPreviewSize(width, height)
                     .build();
 
-        surfaceView.getHolder()
-                .addCallback(new SurfaceHolder.Callback() {
+        try {
+            surfaceView.getHolder()
+                    .addCallback(new SurfaceHolder.Callback() {
+                        @Override
+                        public void surfaceCreated(SurfaceHolder holder) {
+                            startCameraView(context, cameraSource, surfaceView);
+                        }
+
+                        @Override
+                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                        }
+
+                        @Override
+                        public void surfaceDestroyed(SurfaceHolder holder) {
+                            stopCamera();
+                        }
+                    });
+
+            if (barcodeDetector.isOperational()) {
+                barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                     @Override
-                    public void surfaceCreated(SurfaceHolder holder) {
-                        startCameraView(context, cameraSource, surfaceView);
+                    public void release() {
                     }
 
                     @Override
-                    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    }
+                    public void receiveDetections(Detector.Detections<Barcode> detections) {
+                        final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
-                    @Override
-                    public void surfaceDestroyed(SurfaceHolder holder) {
-                        stopQREaderAndCleanup();
+                        if (barcodes.size() != 0 && qrDataListener != null) {
+                            qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
+                        }
                     }
                 });
-
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-                if (barcodeDetector != null) {
-                    barcodeDetector.release();
-                    barcodeDetector = null;
-                }
-
             }
-
-            @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
-                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-
-                if (barcodes.size() != 0 && qrDataListener != null) {
-                    qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
-                }
-            }
-        });
+        } catch (Exception e) {
+            stopCamera();
+            releaseAndCleanupQREader();
+        }
 
     }
 
@@ -170,11 +172,9 @@ public class QREader {
                     PackageManager.PERMISSION_GRANTED) {
                 Log.e(TAG, "Permission not granted!");
                 return;
-            } else {
-                if (!cameraRunning && cameraSource != null) {
-                    cameraSource.start(surfaceView.getHolder());
-                    cameraRunning = true;
-                }
+            } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
+                cameraSource.start(surfaceView.getHolder());
+                cameraRunning = true;
             }
 
         } catch (IOException ie) {
@@ -184,24 +184,27 @@ public class QREader {
     }
 
     /**
-     * Stop QREader and cleanup.
+     * Stop camera
      */
-    public void stopQREaderAndCleanup() {
+    public void stopCamera() {
         try {
             if (cameraRunning && cameraSource != null) {
                 cameraSource.stop();
-                cameraSource.release();
                 cameraRunning = false;
-                cameraSource = null;
-            }
-
-            if (barcodeDetector != null) {
-                barcodeDetector.release();
-                barcodeDetector = null;
             }
         } catch (Exception ie) {
             Log.e(TAG, ie.getMessage());
             ie.printStackTrace();
+        }
+    }
+
+    /**
+     * Release and cleanup qr eader.
+     */
+    public void releaseAndCleanupQREader() {
+        if (cameraSource != null) {
+            cameraSource.release();
+            cameraSource = null;
         }
     }
 }

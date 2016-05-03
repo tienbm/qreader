@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import github.nisrulz.qreader.QRDataListener;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SurfaceView surfaceView;
     private TextView textView_qrcode_info;
+    private Button btn_toggle;
+    private boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +54,36 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+        btn_toggle = (Button) findViewById(R.id.btn_toggle);
+        btn_toggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRunning) {
+                    QREader.getInstance().stopCamera();
+                    isRunning = false;
+                } else {
+                    QREader.getInstance().start(MainActivity.this, surfaceView);
+                    isRunning = true;
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         QREader.getInstance().start(this, surfaceView);
+        isRunning = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        QREader.getInstance().stopQREaderAndCleanup();
+        QREader.getInstance().releaseAndCleanupQREader();
+        isRunning = false;
+
     }
 }

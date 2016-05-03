@@ -15,18 +15,24 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center"
-              android:orientation="vertical">
+             >
     <SurfaceView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" android:layout_above="@+id/scrollView"/>
+    <Button android:id="@+id/btn_toggle" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Toggle" android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
 
     <ScrollView android:layout_width="match_parent"
-                android:layout_height="300dp">
+                android:layout_height="200dp" android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                android:id="@+id/scrollView">
         <TextView
             android:id="@+id/code_info"
             android:padding="10dp"
@@ -36,4 +42,6 @@
             android:text="Point the camera view to a QR Code to read the information"
             android:textSize="20sp"/>
     </ScrollView>
-</LinearLayout>
+
+
+</RelativeLayout>
