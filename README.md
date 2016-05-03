@@ -50,10 +50,9 @@ SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
      public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing, QRDataListener qrDataListener) {
     ```   
 
-
-+ Call `QREader.getInstance().start()` with required arguments in your Activity code, to start reading QR code.
++ Call `QREader.getInstance().init()` with required arguments in your Activity code, to start reading QR code.
 ```java
-QREader.getInstance().start(this, surfaceView);
+QREader.getInstance().init(this, surfaceView);
 ```
 
 *where*
@@ -64,19 +63,30 @@ QREader.getInstance().start(this, surfaceView);
 |surfaceView|`SurfaceView`|
 
 
-+ Call `QREader.getInstance().stopQREaderAndCleanup()` to stop reading QR code and release cameraresource
++ To start QR code detection
 ```java
-QREader.getInstance().stopQREaderAndCleanup();
+QREader.getInstance().start();
+```
++ To stop QR code detection
+```java
+QREader.getInstance().stop();
+```
++ To `releaseAndCleanup` by QREader
+```java
+QREader.getInstance().releaseAndCleanup();
 ```
 
 
-> NOTE : The library uses `android.permission.CAMERA` permission implicitly. For Android 
+> NOTE : 
+
+> 1. The library uses `android.permission.CAMERA` permission implicitly. For Android 
 platforms Marshmallow and above you need to make sure the permission is requested during  
 runtime and granted for QREader to function.
 
-> NOTE : The `onDetected(final String data)` function call returns the data string on a different
+> 2. The `onDetected(final String data)` function call returns the data string on a different
  thread, so in order for you to show the result on the main thread you need to use a handler. 
- Checkout the sample app for the same.
+
+#####  Checkout the sample app for implementation
 
 
 P.S : You can use this nice [QR Code generator](https://www.the-qrcode-generator.com/) to test.
