@@ -1,6 +1,6 @@
 #QREader    [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true)](https://android-arsenal.com/details/1/3478)
 
-A library that uses google's mobile vision api and simplify the QR code reading process 
+Android library using google's mobile vision api to read QR Code 
 
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
