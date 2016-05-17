@@ -115,11 +115,28 @@ public class QREader {
     this.context = context;
     this.surfaceView = surfaceView;
 
+    // Setup Barcodedetector
     if (barcodeDetector == null) {
       barcodeDetector =
           new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+
+      if (barcodeDetector.isOperational()) {
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+          @Override public void release() {
+
+          }
+
+          @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
+            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+            if (barcodes.size() != 0 && qrDataListener != null) {
+              qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
+            }
+          }
+        });
+      }
     }
 
+    // Setup Camera
     if (cameraSource == null) {
       cameraSource =
           new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autofocus_enabled)
@@ -144,24 +161,10 @@ public class QREader {
     }
 
     @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-      if (barcodeDetector.isOperational()) {
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-          @Override public void release() {
-
-          }
-
-          @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
-            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-            if (barcodes.size() != 0 && qrDataListener != null) {
-              qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
-            }
-          }
-        });
-      }
     }
 
     @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
+      stop();
     }
   };
 
@@ -202,7 +205,7 @@ public class QREader {
   }
 
   /**
-   * Release and cleanup qr eader.
+   * Release and cleanup qreader.
    */
   public void releaseAndCleanup() {
     stop();
