@@ -7,7 +7,7 @@ Android library using google's mobile vision api to read QR Code
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
 ```gradle
-compile 'com.github.nisrulz:qreader:1.0.3'
+compile 'com.github.nisrulz:qreader:1.0.4'
 ```
 
 #Usage
@@ -76,6 +76,24 @@ QREader.getInstance().stop();
 + To `releaseAndCleanup` by QREader
 ```java
 QREader.getInstance().releaseAndCleanup();
+```
+
+A typical use case would be , which works well with locking your device and when the app goes into background and then comes back in foreground
+```java
+  @Override protected void onStart() {
+    super.onStart();
+
+    // Call in onStart
+    QREader.getInstance().start();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+
+    // Call in onDestroy
+    QREader.getInstance().stop();
+    QREader.getInstance().releaseAndCleanup();
+  }
 ```
 
 

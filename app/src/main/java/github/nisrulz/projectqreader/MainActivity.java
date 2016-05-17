@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.widget.Button;
 import android.widget.TextView;
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
@@ -29,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
   private SurfaceView surfaceView;
   private TextView textView_qrcode_info;
-  private Button btn_toggle;
-  private boolean isRunning = false;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -53,24 +50,18 @@ public class MainActivity extends AppCompatActivity {
     QREader.getInstance().init(this, surfaceView);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
+  @Override protected void onStart() {
+    super.onStart();
 
+    // Call in onStart
     QREader.getInstance().start();
-    isRunning = true;
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-
-    QREader.getInstance().stop();
-    isRunning = false;
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
 
+    // Call in onDestroy
+    QREader.getInstance().stop();
     QREader.getInstance().releaseAndCleanup();
-    isRunning = false;
   }
 }

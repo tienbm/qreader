@@ -34,8 +34,7 @@ import java.io.IOException;
  * QREader Singleton
  */
 public class QREader {
-
-  private static final String TAG = "QREader";
+  private static final String LOGTAG = "QREader";
   private CameraSource cameraSource = null;
   private BarcodeDetector barcodeDetector = null;
 
@@ -115,11 +114,42 @@ public class QREader {
     this.context = context;
     this.surfaceView = surfaceView;
 
+    if (!hasAutofocus(context)) {
+      Log.e(LOGTAG, "Do not have autofocus feature, disabling autofocus feature in the library!");
+      autofocus_enabled = false;
+    }
+
+    if (!hasCameraHardware(context)) {
+      Log.e(LOGTAG, "Does not have camera hardware!");
+      return;
+    }
+    if (!checkCameraPermission(context)) {
+      Log.e(LOGTAG, "Do not have camera permission!");
+      return;
+    }
+
+    // Setup Barcodedetector
     if (barcodeDetector == null) {
       barcodeDetector =
           new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+
+      if (barcodeDetector.isOperational()) {
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+          @Override public void release() {
+
+          }
+
+          @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
+            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+            if (barcodes.size() != 0 && qrDataListener != null) {
+              qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
+            }
+          }
+        });
+      }
     }
 
+    // Setup Camera
     if (cameraSource == null) {
       cameraSource =
           new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autofocus_enabled)
@@ -144,24 +174,10 @@ public class QREader {
     }
 
     @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-      if (barcodeDetector.isOperational()) {
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-          @Override public void release() {
-
-          }
-
-          @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
-            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-            if (barcodes.size() != 0 && qrDataListener != null) {
-              qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
-            }
-          }
-        });
-      }
     }
 
     @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
+      stop();
     }
   };
 
@@ -171,14 +187,14 @@ public class QREader {
 
       if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
           != PackageManager.PERMISSION_GRANTED) {
-        Log.e(TAG, "Permission not granted!");
+        Log.e(LOGTAG, "Permission not granted!");
         return;
       } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
         cameraSource.start(surfaceView.getHolder());
         cameraRunning = true;
       }
     } catch (IOException ie) {
-      Log.e(TAG, ie.getMessage());
+      Log.e(LOGTAG, ie.getMessage());
       ie.printStackTrace();
     }
   }
@@ -196,13 +212,13 @@ public class QREader {
         cameraRunning = false;
       }
     } catch (Exception ie) {
-      Log.e(TAG, ie.getMessage());
+      Log.e(LOGTAG, ie.getMessage());
       ie.printStackTrace();
     }
   }
 
   /**
-   * Release and cleanup qr eader.
+   * Release and cleanup qreader.
    */
   public void releaseAndCleanup() {
     stop();
@@ -210,6 +226,20 @@ public class QREader {
       cameraSource.release();
       cameraSource = null;
     }
+  }
+
+  private boolean checkCameraPermission(Context context) {
+    String permission = Manifest.permission.CAMERA;
+    int res = context.checkCallingOrSelfPermission(permission);
+    return (res == PackageManager.PERMISSION_GRANTED);
+  }
+
+  private boolean hasCameraHardware(Context context) {
+    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+  }
+
+  private boolean hasAutofocus(Context context) {
+    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
   }
 }
 
