@@ -34,8 +34,7 @@ import java.io.IOException;
  * QREader Singleton
  */
 public class QREader {
-
-  private static final String TAG = "QREader";
+  private static final String LOGTAG = "QREader";
   private CameraSource cameraSource = null;
   private BarcodeDetector barcodeDetector = null;
 
@@ -115,6 +114,20 @@ public class QREader {
     this.context = context;
     this.surfaceView = surfaceView;
 
+    if (!hasAutofocus(context)) {
+      Log.e(LOGTAG, "Do not have autofocus feature, disabling autofocus feature in the library!");
+      autofocus_enabled = false;
+    }
+
+    if (!hasCameraHardware(context)) {
+      Log.e(LOGTAG, "Does not have camera hardware!");
+      return;
+    }
+    if (!checkCameraPermission(context)) {
+      Log.e(LOGTAG, "Do not have camera permission!");
+      return;
+    }
+
     // Setup Barcodedetector
     if (barcodeDetector == null) {
       barcodeDetector =
@@ -174,14 +187,14 @@ public class QREader {
 
       if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
           != PackageManager.PERMISSION_GRANTED) {
-        Log.e(TAG, "Permission not granted!");
+        Log.e(LOGTAG, "Permission not granted!");
         return;
       } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
         cameraSource.start(surfaceView.getHolder());
         cameraRunning = true;
       }
     } catch (IOException ie) {
-      Log.e(TAG, ie.getMessage());
+      Log.e(LOGTAG, ie.getMessage());
       ie.printStackTrace();
     }
   }
@@ -199,7 +212,7 @@ public class QREader {
         cameraRunning = false;
       }
     } catch (Exception ie) {
-      Log.e(TAG, ie.getMessage());
+      Log.e(LOGTAG, ie.getMessage());
       ie.printStackTrace();
     }
   }
@@ -213,6 +226,20 @@ public class QREader {
       cameraSource.release();
       cameraSource = null;
     }
+  }
+
+  private boolean checkCameraPermission(Context context) {
+    String permission = Manifest.permission.CAMERA;
+    int res = context.checkCallingOrSelfPermission(permission);
+    return (res == PackageManager.PERMISSION_GRANTED);
+  }
+
+  private boolean hasCameraHardware(Context context) {
+    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+  }
+
+  private boolean hasAutofocus(Context context) {
+    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
   }
 }
 

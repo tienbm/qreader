@@ -76,6 +76,24 @@ QREader.getInstance().stop();
 QREader.getInstance().releaseAndCleanup();
 ```
 
+A typical use case would be , which works well with locking your device and when the app goes into background and then comes back in foreground
+```java
+  @Override protected void onStart() {
+    super.onStart();
+
+    // Call in onStart
+    QREader.getInstance().start();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+
+    // Call in onDestroy
+    QREader.getInstance().stop();
+    QREader.getInstance().releaseAndCleanup();
+  }
+```
+
 
 > NOTE : 
 

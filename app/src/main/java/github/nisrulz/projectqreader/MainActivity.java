@@ -17,7 +17,6 @@
 package github.nisrulz.projectqreader;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -51,24 +50,18 @@ public class MainActivity extends AppCompatActivity {
     QREader.getInstance().init(this, surfaceView);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-    super.onSaveInstanceState(outState, outPersistentState);
-  }
-
-  @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    super.onRestoreInstanceState(savedInstanceState);
-  }
-
   @Override protected void onStart() {
     super.onStart();
 
+    // Call in onStart
     QREader.getInstance().start();
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    QREader.getInstance().stop();
 
+    // Call in onDestroy
+    QREader.getInstance().stop();
     QREader.getInstance().releaseAndCleanup();
   }
 }
