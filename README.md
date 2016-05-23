@@ -7,7 +7,7 @@ Android library using google's mobile vision api to read QR Code
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
 ```gradle
-compile 'com.github.nisrulz:qreader:1.0.4'
+compile 'com.github.nisrulz:qreader:1.0.5'
 ```
 
 #Usage
@@ -24,76 +24,108 @@ compile 'com.github.nisrulz:qreader:1.0.4'
 SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
 ```
 
-+ Next setup the config with `QRDataListener` as the last argument in any of the `setConfig()` calls
-    + The default config uses autofocus, back camera and preview size set at 800x800 and is referenced as below
++ Next create an object of `QREader` using the `Builder` in your `onCreate()`
     ```java
-    QREader.getInstance().setUpConfig(new QRDataListener() {
-            @Override
-            public void onDetected(final String data) {
-                Log.d("QREader", "Value : " + data);
-                
-                // Post data on UI Thread
-                textView_qrcode_info.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView_qrcode_info.setText(data);
-                    }
-                });
-            }
-        });
+    QREader qrEader;
+    .
+    ..
+    ...
+     @Override protected void onCreate(Bundle savedInstanceState) {
+        ..
+    
+        surfaceView = (SurfaceView) findViewById(R.id.camera_view);
+    
+        qrEader = new QREader.Builder(this, surfaceView, new QRDataListener() {
+          @Override public void onDetected(final String data) {
+            // Do something with the string data
+            
+            Log.d("QREader", "Value : " + data);
+          }
+        }).build();
+      }    
     ```
     
-    + There are other config methods to give you more granular configurations
+    *where* 
+    + `Builder` takes in arguments as `Builder(context, surfaceview, qrdatalistner)`
+    + **[Optional]** To modify further you can call  below functions on the `Builder` before calling the `build()`
+      + `enableAutofocus(boolean autofocus_enabled)`  // Default is `true`
+      + `width(int width)` // Default is `800`
+      + `height(int height)` // Default is `800`
+      + `facing(int facing)` // Default is `QREader.BACK_CAM`
+        + where argument can be one of  `QREader.BACK_CAM` , `QREader.FRONT_CAM`
+
++ Next Call ` qrEader.init()`, right after you `build()` your object using the `Builder`.
     ```java
-    // Disable/Enable autofocus
-    // Choose between Front facing or Back facing camera | Possible arguments : CameraSource.CAMERA_FACING_BACK /  CameraSource.CAMERA_FACING_FRONT
-     public void setUpConfig(boolean autofocus_enabled, int facing, QRDataListener qrDataListener) {
-    // Change all the config values
-     public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing, QRDataListener qrDataListener) {
-    ```   
+     @Override protected void onCreate(Bundle savedInstanceState) {
+        ..
+      
+        qrEader = new QREader.Builder(this, surfaceView, new QRDataListener() {
+          @Override public void onDetected(final String data) {
+            ..
+          }
+        }).build();
+        
+        // Call Init
+        qrEader.init();
+     }    
+    ```
 
-+ Call `QREader.getInstance().init()` with required arguments in your Activity code, to start reading QR code.
++ To start QR code detection, call `start()` on the `qreader` object 
 ```java
-QREader.getInstance().init(this, surfaceView);
+qrEader.start();
 ```
-
-*where*
-
-|argument|type|
-|---|---|
-|this|`Context`|
-|surfaceView|`SurfaceView`|
-
-
-+ To start QR code detection
++ To stop QR code detection, call `stop()` on the `qreader` object 
 ```java
-QREader.getInstance().start();
+qrEader.stop();
 ```
-+ To stop QR code detection
++ To release and cleanup , call `releaseAndCleanup()` on the `qreader` object 
 ```java
-QREader.getInstance().stop();
-```
-+ To `releaseAndCleanup` by QREader
-```java
-QREader.getInstance().releaseAndCleanup();
+qrEader.releaseAndCleanup();
 ```
 
 A typical use case would be , which works well with locking your device and when the app goes into background and then comes back in foreground
 ```java
-  @Override protected void onStart() {
-    super.onStart();
-
-    // Call in onStart
-    QREader.getInstance().start();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-
-    // Call in onDestroy
-    QREader.getInstance().stop();
-    QREader.getInstance().releaseAndCleanup();
-  }
+   private SurfaceView surfaceView;
+   private TextView textView_qrcode_info;
+   QREader qrEader;
+ 
+   @Override protected void onCreate(Bundle savedInstanceState) {
+     ...
+     ...
+     
+     surfaceView = (SurfaceView) findViewById(R.id.camera_view);
+     textView_qrcode_info = (TextView) findViewById(R.id.code_info);
+ 
+     qrEader = new QREader.Builder(this, surfaceView, new QRDataListener() {
+       @Override public void onDetected(final String data) {
+         Log.d("QREader", "Value : " + data);
+         textView_qrcode_info.post(new Runnable() {
+           @Override public void run() {
+             textView_qrcode_info.setText(data);
+           }
+         });
+       }
+     }).build();
+ 
+     qrEader.init();
+   }
+ 
+   @Override protected void onStart() {
+     super.onStart();
+     ...
+ 
+     // Call in onStart
+     qrEader.start();
+   }
+ 
+   @Override protected void onDestroy() {
+     super.onDestroy();
+     ..
+ 
+     // Call in onDestroy
+     qrEader.stop();
+     qrEader.releaseAndCleanup();
+   }
 ```
 
 
