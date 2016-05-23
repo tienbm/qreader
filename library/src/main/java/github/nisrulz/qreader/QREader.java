@@ -96,7 +96,7 @@ public class QREader {
         }
       });
     } else {
-      Log.e(LOGTAG,"Barcode recognition libs are not downloaded and are not operational");
+      Log.e(LOGTAG, "Barcode recognition libs are not downloaded and are not operational");
     }
 
     // Setup Camera
@@ -203,7 +203,7 @@ public class QREader {
       this.autofocus_enabled = true;
       this.width = 800;
       this.height = 800;
-      this.facing = CameraSource.CAMERA_FACING_BACK;
+      this.facing = BACK_CAM;
       this.qrDataListener = qrDataListener;
       this.context = context;
       this.surfaceView = surfaceView;
