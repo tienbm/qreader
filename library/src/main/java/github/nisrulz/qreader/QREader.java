@@ -38,82 +38,32 @@ public class QREader {
   private CameraSource cameraSource = null;
   private BarcodeDetector barcodeDetector = null;
 
+  public static final int FRONT_CAM = CameraSource.CAMERA_FACING_FRONT;
+  public static final int BACK_CAM = CameraSource.CAMERA_FACING_BACK;
+
   private boolean autofocus_enabled;
-  private int width;
-  private int height;
-  private int facing;
+  private final int width;
+  private final int height;
+  private final int facing;
   private boolean cameraRunning = false;
-  private QRDataListener qrDataListener;
-  private Context context;
-  private SurfaceView surfaceView;
+  private final QRDataListener qrDataListener;
+  private final Context context;
+  private final SurfaceView surfaceView;
 
-  private static QREader INSTANCE;
-
-  private QREader() {
-
-  }
-
-  /**
-   * Gets instance.
-   *
-   * @return the instance
-   */
-  public static QREader getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new QREader();
-    }
-    return INSTANCE;
-  }
-
-  /**
-   * Sets up config.
-   *
-   * @param qrDataListener the qr data listener
-   */
-  public void setUpConfig(final QRDataListener qrDataListener) {
-    setUpConfig(true, 800, 800, CameraSource.CAMERA_FACING_BACK, qrDataListener);
-  }
-
-  /**
-   * Sets up config.
-   *
-   * @param autofocus_enabled the autofocus enabled
-   * @param facing the facing
-   * @param qrDataListener the qr data listener
-   */
-  public void setUpConfig(boolean autofocus_enabled, int facing,
-      final QRDataListener qrDataListener) {
-    setUpConfig(autofocus_enabled, 800, 800, facing, qrDataListener);
-  }
-
-  /**
-   * Sets up config.
-   *
-   * @param autofocus_enabled the autofocus enabled
-   * @param width the width
-   * @param height the height
-   * @param facing the facing
-   * @param qrDataListener the qr data listener
-   */
-  public void setUpConfig(boolean autofocus_enabled, int width, int height, int facing,
-      final QRDataListener qrDataListener) {
-    this.autofocus_enabled = autofocus_enabled;
-    this.width = width;
-    this.height = height;
-    this.facing = facing;
-    this.qrDataListener = qrDataListener;
+  public QREader(Builder builder) {
+    this.autofocus_enabled = builder.autofocus_enabled;
+    this.width = builder.width;
+    this.height = builder.height;
+    this.facing = builder.facing;
+    this.qrDataListener = builder.qrDataListener;
+    this.context = builder.context;
+    this.surfaceView = builder.surfaceView;
   }
 
   /**
    * Init.
-   *
-   * @param context the context
-   * @param surfaceView the surface view
    */
-  public void init(final Context context, final SurfaceView surfaceView) {
-    this.context = context;
-    this.surfaceView = surfaceView;
-
+  public void init() {
     if (!hasAutofocus(context)) {
       Log.e(LOGTAG, "Do not have autofocus feature, disabling autofocus feature in the library!");
       autofocus_enabled = false;
@@ -129,34 +79,32 @@ public class QREader {
     }
 
     // Setup Barcodedetector
-    if (barcodeDetector == null) {
-      barcodeDetector =
-          new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+    barcodeDetector =
+        new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
 
-      if (barcodeDetector.isOperational()) {
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-          @Override public void release() {
+    if (barcodeDetector.isOperational()) {
+      barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+        @Override public void release() {
 
+        }
+
+        @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
+          final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+          if (barcodes.size() != 0 && qrDataListener != null) {
+            qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
           }
-
-          @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
-            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-            if (barcodes.size() != 0 && qrDataListener != null) {
-              qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
-            }
-          }
-        });
-      }
+        }
+      });
+    } else {
+      Log.e(LOGTAG,"Barcode recognition libs are not downloaded and are not operational");
     }
 
     // Setup Camera
-    if (cameraSource == null) {
-      cameraSource =
-          new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autofocus_enabled)
-              .setFacing(facing)
-              .setRequestedPreviewSize(width, height)
-              .build();
-    }
+    cameraSource =
+        new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autofocus_enabled)
+            .setFacing(facing)
+            .setRequestedPreviewSize(width, height)
+            .build();
   }
 
   /**
@@ -240,6 +188,50 @@ public class QREader {
 
   private boolean hasAutofocus(Context context) {
     return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+  }
+
+  public static class Builder {
+    private boolean autofocus_enabled;
+    private int width;
+    private int height;
+    private int facing;
+    private QRDataListener qrDataListener;
+    private Context context;
+    private SurfaceView surfaceView;
+
+    public Builder(Context context, SurfaceView surfaceView, QRDataListener qrDataListener) {
+      this.autofocus_enabled = true;
+      this.width = 800;
+      this.height = 800;
+      this.facing = CameraSource.CAMERA_FACING_BACK;
+      this.qrDataListener = qrDataListener;
+      this.context = context;
+      this.surfaceView = surfaceView;
+    }
+
+    public Builder enableAutofocus(boolean autofocus_enabled) {
+      this.autofocus_enabled = autofocus_enabled;
+      return this;
+    }
+
+    public Builder width(int width) {
+      this.width = width;
+      return this;
+    }
+
+    public Builder height(int height) {
+      this.height = height;
+      return this;
+    }
+
+    public Builder facing(int facing) {
+      this.facing = facing;
+      return this;
+    }
+
+    public QREader build() {
+      return new QREader(this);
+    }
   }
 }
 

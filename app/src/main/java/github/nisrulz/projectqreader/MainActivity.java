@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
   private SurfaceView surfaceView;
   private TextView textView_qrcode_info;
+  QREader qrEader;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     surfaceView = (SurfaceView) findViewById(R.id.camera_view);
     textView_qrcode_info = (TextView) findViewById(R.id.code_info);
 
-    QREader.getInstance().setUpConfig(new QRDataListener() {
+    qrEader = new QREader.Builder(this, surfaceView, new QRDataListener() {
       @Override public void onDetected(final String data) {
         Log.d("QREader", "Value : " + data);
         textView_qrcode_info.post(new Runnable() {
@@ -45,23 +46,23 @@ public class MainActivity extends AppCompatActivity {
           }
         });
       }
-    });
+    }).build();
 
-    QREader.getInstance().init(this, surfaceView);
+    qrEader.init();
   }
 
   @Override protected void onStart() {
     super.onStart();
 
     // Call in onStart
-    QREader.getInstance().start();
+    qrEader.start();
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
 
     // Call in onDestroy
-    QREader.getInstance().stop();
-    QREader.getInstance().releaseAndCleanup();
+    qrEader.stop();
+    qrEader.releaseAndCleanup();
   }
 }

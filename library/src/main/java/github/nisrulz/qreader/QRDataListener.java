@@ -18,5 +18,5 @@ package github.nisrulz.qreader;
 
 public interface QRDataListener {
 
-    void onDetected(String data);
+    void onDetected(final String data);
 }
