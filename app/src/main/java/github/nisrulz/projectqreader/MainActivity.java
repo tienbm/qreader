@@ -46,8 +46,12 @@ public class MainActivity extends AppCompatActivity {
           }
         });
       }
-    }).build();
-    
+    }).facing(QREader.BACK_CAM)
+        .enableAutofocus(true)
+        .height(800)
+        .width(800)
+        .build();
+
     qrEader.init();
   }
 
