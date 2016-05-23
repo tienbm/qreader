@@ -5,7 +5,7 @@ Android library using google's mobile vision api to read QR Code
 #Integration
 - QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency
 ```gradle
-compile 'com.github.nisrulz:qreader:1.0.4'
+compile 'com.github.nisrulz:qreader:1.0.5'
 ```
 
 #Usage
