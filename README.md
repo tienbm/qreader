@@ -45,7 +45,7 @@ SurfaceView surfaceView = (SurfaceView) findViewById(R.id.camera_view);
     
     *where* 
     + `Builder` takes in arguments as `Builder(context, surfaceview, qrdatalistner)`
-    +  To modify further you can call below functions on the `Builder` before calling the `build()`
+    + **[Optional]** To modify further you can call  below functions on the `Builder` before calling the `build()`
       + `enableAutofocus(boolean autofocus_enabled)`  // Default is `true`
       + `width(int width)` // Default is `800`
       + `height(int height)` // Default is `800`
