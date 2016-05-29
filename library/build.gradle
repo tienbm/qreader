@@ -25,8 +25,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "1.0.6"
         consumerProguardFiles 'consumer-proguard-rules.pro'
     }
     buildTypes {
@@ -40,7 +40,7 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     // Add Vision API
-    compile "com.google.android.gms:play-services-vision:9.0.0"
+    compile "com.google.android.gms:play-services-vision:8.4.0"
 }
 
 // Place this in the 'build.gradle' of the library module
