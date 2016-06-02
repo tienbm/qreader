@@ -1,7 +1,7 @@
 ![Image](https://github.com/nisrulz/qreader/blob/master/img/github_banner.png)
 
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true)](https://android-arsenal.com/details/1/3478) <a href="http://www.methodscount.com/?lib=com.github.nisrulz%3Aqreader%3A1.0.6"><img src="https://img.shields.io/badge/Size-10 KB-e91e63.svg"/></a> [![Twitter](https://img.shields.io/badge/Twitter-@nisrulz-blue.svg?style=flat)](http://twitter.com/nisrulz)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true)](https://android-arsenal.com/details/1/3478) <a href="http://www.methodscount.com/?lib=com.github.nisrulz%3Aqreader%3A1.0.6"><img src="https://img.shields.io/badge/Methods and size-core: 65 | deps: 13956 | 10 KB-e91e63.svg"/></a> [![Twitter](https://img.shields.io/badge/Twitter-@nisrulz-blue.svg?style=flat)](http://twitter.com/nisrulz)
 
 Android library which makes use of Google's Mobile Vision API to enable reading QR Code.
 
