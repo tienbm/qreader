@@ -6,8 +6,10 @@
     <title>Qreader by nisrulz</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -17,10 +19,7 @@
       <header>
         <h1>Qreader</h1>
         <p>A library that uses google&#39;s mobile vision api and simplify the QR code reading process</p>
-
         <p class="view"><a href="https://github.com/nisrulz/qreader">View the Project on GitHub <small>nisrulz/qreader</small></a></p>
-
-
         <ul>
           <li><a href="https://github.com/nisrulz/qreader/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/nisrulz/qreader/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -29,8 +28,11 @@
       </header>
       <section>
         <h1>
-<a id="qreader-----" class="anchor" href="#qreader-----" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>QREader    <a href="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader"><img src="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg" alt="Maven Central"></a> <a href="https://android-arsenal.com/details/1/3478"><img src="https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true" alt="Android Arsenal"></a>
-</h1>
+<a id="qreader" class="anchor" href="#qreader" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>QREader</h1>
+
+<p><a href="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader"><img src="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg" alt="Maven Central"></a> <a href="https://android-arsenal.com/details/1/3478"><img src="https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true" alt="Android Arsenal"></a></p>
+
+<p><a href="https://twitter.com/nisrulz"><img src="https://img.shields.io/twitter/follow/nisrulz.svg?style=social" alt="Twitter Follow"></a></p>
 
 <p>A library that uses google's mobile vision api and simplify the QR code reading process </p>
 
@@ -41,7 +43,7 @@
 <li>QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency</li>
 </ul>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.github.nisrulz:qreader:1.0.1<span class="pl-pds">'</span></span></pre></div>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.github.nisrulz:qreader:1.0.6<span class="pl-pds">'</span></span></pre></div>
 
 <h1>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
@@ -64,59 +66,106 @@
 
 <ul>
 <li>
-<p>Next setup the config</p>
+<p>Next create an object of <code>QREader</code> using the <code>Builder</code> in your <code>onCreate()</code></p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">QREader</span> qrEader;
+<span class="pl-c1">.</span>
+<span class="pl-c1">..</span>
+<span class="pl-c1">...</span>
+ @<span class="pl-smi">Override</span> <span class="pl-k">protected</span> <span class="pl-k">void</span> onCreate(<span class="pl-smi">Bundle</span> savedInstanceState) {
+    <span class="pl-c1">..</span>
+
+    surfaceView <span class="pl-k">=</span> (<span class="pl-smi">SurfaceView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>camera_view);
+
+    qrEader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">QREader</span>.<span class="pl-smi">Builder</span>(<span class="pl-v">this</span>, surfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
+      <span class="pl-k">@Override</span> <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
+        <span class="pl-c">// Do something with the string data</span>
+
+        <span class="pl-smi">Log</span><span class="pl-k">.</span>d(<span class="pl-s"><span class="pl-pds">"</span>QREader<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Value : <span class="pl-pds">"</span></span> <span class="pl-k">+</span> data);
+      }
+    })<span class="pl-k">.</span>build();
+  }    </pre></div>
+
+<p><em>where</em> </p>
 
 <ul>
-<li>The default config uses autofocus, back camera and preview size set at 800x800 and is referenced as below</li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>setUpConfig();</pre></div>
-
-<ul>
-<li>There are other config methods to give you more granular configurations</li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-c">// Disable/Enable autofocus</span>
-<span class="pl-c">// Choose between Front facing or Back facing camera | Possible arguments : CameraSource.CAMERA_FACING_BACK /  CameraSource.CAMERA_FACING_FRONT</span>
-<span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>setUpConfig(<span class="pl-k">boolean</span> autofocus_enabled, <span class="pl-k">int</span> facing);
-<span class="pl-c">// Change all the config values</span>
-<span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>setUpConfig(<span class="pl-k">boolean</span> autofocus_enabled, <span class="pl-k">int</span> width, <span class="pl-k">int</span> height, <span class="pl-k">int</span> facing);</pre></div>
+<li>
+<code>Builder</code> takes in arguments as <code>Builder(context, surfaceview, qrdatalistner)</code>
 </li>
-<li><p>Lastly call <code>QREader.getInstance().start()</code> with required arguments in your Activity code, to start reading 
-QR code.</p></li>
+<li>
+<strong>[Optional]</strong> To modify further you can call  below functions on the <code>Builder</code> before calling the <code>build()</code>
+
+<ul>
+<li>
+<code>enableAutofocus(boolean autofocus_enabled)</code>  // Default is <code>true</code>
+</li>
+<li>
+<code>width(int width)</code> // Default is <code>800</code>
+</li>
+<li>
+<code>height(int height)</code> // Default is <code>800</code>
+</li>
+<li>
+<code>facing(int facing)</code> // Default is <code>QREader.BACK_CAM</code>
+
+<ul>
+<li>where argument can be one of  <code>QREader.BACK_CAM</code> , <code>QREader.FRONT_CAM</code>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Next Call <code>qrEader.init()</code>, right after you <code>build()</code> your object using the <code>Builder</code>.</p>
+
+<div class="highlight highlight-source-java"><pre> @<span class="pl-smi">Override</span> <span class="pl-k">protected</span> <span class="pl-k">void</span> onCreate(<span class="pl-smi">Bundle</span> savedInstanceState) {
+    <span class="pl-c1">..</span>
+
+    qrEader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">QREader</span>.<span class="pl-smi">Builder</span>(<span class="pl-v">this</span>, surfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
+      <span class="pl-k">@Override</span> <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
+        <span class="pl-c1">..</span>
+      }
+    })<span class="pl-k">.</span>build();
+
+    <span class="pl-c">// Call Init</span>
+    qrEader<span class="pl-k">.</span>init();
+ }    </pre></div>
+</li>
+<li><p>To start QR code detection, call <code>start()</code> on the <code>qreader</code> object </p></li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre><span class="pl-smi">QREader</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>start(<span class="pl-v">this</span>, surfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
-        <span class="pl-k">@Override</span>
-        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
-            <span class="pl-smi">Log</span><span class="pl-k">.</span>d(<span class="pl-s"><span class="pl-pds">"</span>QREader<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Value : <span class="pl-pds">"</span></span> <span class="pl-k">+</span> data);
-        }
-    });</pre></div>
+<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>start();</pre></div>
 
-<p><em>where</em></p>
+<ul>
+<li>To stop QR code detection, call <code>stop()</code> on the <code>qreader</code> object </li>
+</ul>
 
-<table>
-<thead>
-<tr>
-<th>argument</th>
-<th>type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>this</td>
-<td><code>Context</code></td>
-</tr>
-<tr>
-<td>surfaceView</td>
-<td><code>SurfaceView</code></td>
-</tr>
-<tr>
-<td>new QRDataListener()</td>
-<td><code>QRDataListener</code></td>
-</tr>
-</tbody>
-</table>
+<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>stop();</pre></div>
+
+<ul>
+<li>To release and cleanup , call <code>releaseAndCleanup()</code> on the <code>qreader</code> object </li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>releaseAndCleanup();</pre></div>
+
+<blockquote>
+<p>NOTE : </p>
+
+<ol>
+<li><p>The library uses <code>android.permission.CAMERA</code> permission implicitly. For Android 
+platforms Marshmallow and above you need to make sure the permission is requested during<br>
+runtime and granted for QREader to function.</p></li>
+<li><p>The <code>onDetected(final String data)</code> function call returns the data string on a different
+thread, so in order for you to show the result on the main thread you need to use a handler. </p></li>
+</ol>
+</blockquote>
+
+<h5>
+<a id="checkout-the-sample-app-for-implementation" class="anchor" href="#checkout-the-sample-app-for-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Checkout the sample app for implementation</h5>
+
+<p>P.S : You can use this nice <a href="https://www.the-qrcode-generator.com/">QR Code generator</a> to test.</p>
 
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
@@ -136,12 +185,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </code></pre>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/nisrulz">nisrulz</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/nisrulz">nisrulz</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
