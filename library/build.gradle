@@ -16,7 +16,7 @@
  */
 
 apply plugin: 'com.android.library'
-apply from: 'https://raw.github.com/nisrulz/gradle-mvn-push/master/gradle-mvn-push.gradle'
+//apply from: 'https://raw.github.com/nisrulz/gradle-mvn-push/master/gradle-mvn-push.gradle'
 
 android {
     compileSdkVersion 24
@@ -40,7 +40,7 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     // Add Vision API
-    compile "com.google.android.gms:play-services-vision:8.4.0"
+    compile "com.google.android.gms:play-services-vision:9.2.0"
 }
 
 // Place this in the 'build.gradle' of the library module
