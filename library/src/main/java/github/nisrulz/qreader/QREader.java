@@ -36,7 +36,6 @@ import java.io.IOException;
 public class QREader {
   private static final String LOGTAG = "QREader";
   private CameraSource cameraSource = null;
-  private BarcodeDetector barcodeDetector = null;
 
   /**
    * The constant FRONT_CAM.
@@ -47,47 +46,39 @@ public class QREader {
    */
   public static final int BACK_CAM = CameraSource.CAMERA_FACING_BACK;
 
-  private boolean autofocusEnabled;
   private final int width;
   private final int height;
   private final int facing;
-  private boolean cameraRunning = false;
   private final QRDataListener qrDataListener;
   private final Context context;
   private final SurfaceView surfaceView;
+  private boolean autoFocusEnabled;
+
+  private boolean cameraRunning = false;
+
+  private boolean surfaceCreated = false;
 
   private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
     @Override public void surfaceCreated(SurfaceHolder surfaceHolder) {
-      try {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED) {
-          Log.e(LOGTAG, "Permission not granted!");
-          return;
-        } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
-          cameraSource.start(surfaceView.getHolder());
-          cameraRunning = true;
-        }
-      } catch (IOException ie) {
-        Log.e(LOGTAG, ie.toString());
-      }
+      //we can start barcode after after creating
+      surfaceCreated = true;
+      startCameraView(context, cameraSource, surfaceView);
     }
+
 
     @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-      // do nothing
     }
 
+
     @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+      surfaceCreated = false;
       stop();
+      surfaceHolder.removeCallback(this);
     }
   };
 
-  /**
-   * Instantiates a new Qr eader.
-   *
-   * @param builder the builder
-   */
-  public QREader(final Builder builder) {
-    this.autofocusEnabled = builder.autofocusEnabled;
+  public QREader(Builder builder) {
+    this.autoFocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
     this.facing = builder.facing;
@@ -96,13 +87,17 @@ public class QREader {
     this.surfaceView = builder.surfaceView;
   }
 
+  public boolean isCameraRunning() {
+    return cameraRunning;
+  }
+
   /**
    * Init.
    */
   public void init() {
     if (!hasAutofocus(context)) {
       Log.e(LOGTAG, "Do not have autofocus feature, disabling autofocus feature in the library!");
-      autofocusEnabled = false;
+      autoFocusEnabled = false;
     }
 
     if (!hasCameraHardware(context)) {
@@ -115,8 +110,7 @@ public class QREader {
     }
 
     // Setup Barcodedetector
-    barcodeDetector =
-        new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+    BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
 
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
@@ -131,24 +125,48 @@ public class QREader {
           }
         }
       });
+
+      cameraSource =
+          new CameraSource.Builder(context, barcodeDetector)
+              .setAutoFocusEnabled(autoFocusEnabled)
+              .setFacing(facing)
+              .setRequestedPreviewSize(width, height)
+              .build();
     } else {
       Log.e(LOGTAG, "Barcode recognition libs are not downloaded and are not operational");
     }
-
-    // Setup Camera
-    cameraSource =
-        new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autofocusEnabled)
-            .setFacing(facing)
-            .setRequestedPreviewSize(width, height)
-            .build();
   }
 
   /**
-   * Start.
+   * Start scanning qr codes.
    */
   public void start() {
     if (surfaceView != null && surfaceHolderCallback != null) {
-      surfaceView.getHolder().addCallback(surfaceHolderCallback);
+      //if surface already created, we can start camera
+      if (surfaceCreated) {
+        startCameraView(context, cameraSource, surfaceView);
+      } else {
+        //startCameraView will be invoke in void surfaceCreated
+        surfaceView.getHolder().addCallback(surfaceHolderCallback);
+      }
+    }
+  }
+
+  private void startCameraView(Context context, CameraSource cameraSource,
+                               SurfaceView surfaceView) {
+    if (cameraRunning)
+      throw new IllegalStateException("Camera already started!");
+    try {
+      if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+          != PackageManager.PERMISSION_GRANTED) {
+        Log.e(LOGTAG, "Permission not granted!");
+      } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
+        cameraSource.start(surfaceView.getHolder());
+        cameraRunning = true;
+      }
+    } catch (IOException ie) {
+      Log.e(LOGTAG, ie.getMessage());
+      ie.printStackTrace();
     }
   }
 
@@ -157,15 +175,13 @@ public class QREader {
    */
   public void stop() {
     try {
-      if (surfaceView != null && surfaceHolderCallback != null) {
-        surfaceView.getHolder().removeCallback(surfaceHolderCallback);
-      }
       if (cameraRunning && cameraSource != null) {
         cameraSource.stop();
         cameraRunning = false;
       }
     } catch (Exception ie) {
       Log.e(LOGTAG, ie.getMessage());
+      ie.printStackTrace();
     }
   }
 
@@ -175,6 +191,7 @@ public class QREader {
   public void releaseAndCleanup() {
     stop();
     if (cameraSource != null) {
+      //release camera and barcode detector(will invoke inside) resources
       cameraSource.release();
       cameraSource = null;
     }
