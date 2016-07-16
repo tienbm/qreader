@@ -36,7 +36,6 @@ import java.io.IOException;
 public class QREader {
   private static final String LOGTAG = "QREader";
   private CameraSource cameraSource = null;
-  private BarcodeDetector barcodeDetector = null;
 
   /**
    * The constant FRONT_CAM.
@@ -47,22 +46,22 @@ public class QREader {
    */
   public static final int BACK_CAM = CameraSource.CAMERA_FACING_BACK;
 
-  private boolean autofocusEnabled;
   private final int width;
   private final int height;
   private final int facing;
   private final QRDataListener qrDataListener;
   private final Context context;
   private final SurfaceView surfaceView;
-  private CameraSource cameraSource = null;
-  private BarcodeDetector barcodeDetector = null;
   private boolean autoFocusEnabled;
+
   private boolean cameraRunning = false;
-  private boolean created = false;
+
+  private boolean surfaceCreated = false;
 
   private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
     @Override public void surfaceCreated(SurfaceHolder surfaceHolder) {
-      created = true;
+      //we can start barcode after after creating
+      surfaceCreated = true;
       startCameraView(context, cameraSource, surfaceView);
     }
 
@@ -72,14 +71,14 @@ public class QREader {
 
 
     @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-      created = false;
+      surfaceCreated = false;
       stop();
       surfaceHolder.removeCallback(this);
     }
   };
 
   public QREader(Builder builder) {
-    this.autoFocusEnabled = builder.autofocus_enabled;
+    this.autoFocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
     this.facing = builder.facing;
@@ -111,8 +110,7 @@ public class QREader {
     }
 
     // Setup Barcodedetector
-    barcodeDetector =
-        new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+    BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
 
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
@@ -132,7 +130,6 @@ public class QREader {
           new CameraSource.Builder(context, barcodeDetector)
               .setAutoFocusEnabled(autoFocusEnabled)
               .setFacing(facing)
-              .setRequestedFps(18)
               .setRequestedPreviewSize(width, height)
               .build();
     } else {
@@ -145,9 +142,11 @@ public class QREader {
    */
   public void start() {
     if (surfaceView != null && surfaceHolderCallback != null) {
-      if (created) {
+      //if surface already created, we can start camera
+      if (surfaceCreated) {
         startCameraView(context, cameraSource, surfaceView);
       } else {
+        //startCameraView will be invoke in void surfaceCreated
         surfaceView.getHolder().addCallback(surfaceHolderCallback);
       }
     }
@@ -156,7 +155,7 @@ public class QREader {
   private void startCameraView(Context context, CameraSource cameraSource,
                                SurfaceView surfaceView) {
     if (cameraRunning)
-      return;
+      throw new IllegalStateException("Camera already started!");
     try {
       if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
           != PackageManager.PERMISSION_GRANTED) {
@@ -192,6 +191,7 @@ public class QREader {
   public void releaseAndCleanup() {
     stop();
     if (cameraSource != null) {
+      //release camera and barcode detector(will invoke inside) resources
       cameraSource.release();
       cameraSource = null;
     }

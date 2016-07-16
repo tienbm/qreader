@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
 
     surfaceView = (SurfaceView) findViewById(R.id.camera_view);
     text = (TextView) findViewById(R.id.code_info);
-    stateBtn = (Button) findViewById(R.id.btn_startstop);
+    stateBtn = (Button) findViewById(R.id.state_btn);
 
     surfaceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override public void onGlobalLayout() {
-        //to get surfaceView size
+        //to pass surfaceView size to camera preview
         initAndStartQrReader(surfaceView.getWidth(), surfaceView.getHeight());
         surfaceView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
       }
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
 
   @Override protected void onDestroy() {
     super.onDestroy();
+    //free resources of camera and google barcode decoder
     if (qrEader != null)
       qrEader.releaseAndCleanup();
   }
