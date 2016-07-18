@@ -26,6 +26,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
@@ -36,6 +38,7 @@ import java.io.IOException;
 public class QREader {
   private static final String LOGTAG = "QREader";
   private CameraSource cameraSource = null;
+  private BarcodeDetector barcodeDetector = null;
 
   /**
    * The constant FRONT_CAM.
@@ -77,14 +80,24 @@ public class QREader {
     }
   };
 
-  public QREader(Builder builder) {
-    this.autoFocusEnabled = builder.autofocusEnabled;
+  /*
+   * Instantiates a new Qr eader.
+   *
+   * @param builder the builder
+   */
+  public QREader(final Builder builder) {
+    this.autofocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
     this.facing = builder.facing;
     this.qrDataListener = builder.qrDataListener;
     this.context = builder.context;
     this.surfaceView = builder.surfaceView;
+    this.barcodeDetector = builder.barcodeDetector;
+    //for better performance we should use one detector for all Reader, if builder not specify it
+    this.barcodeDetector = builder.barcodeDetector;
+    if (barcodeDetector == null)
+      this.barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(context);
   }
 
   public boolean isCameraRunning() {
@@ -109,8 +122,7 @@ public class QREader {
       return;
     }
 
-    // Setup Barcodedetector
-    BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+
 
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
@@ -222,7 +234,7 @@ public class QREader {
     private QRDataListener qrDataListener;
     private Context context;
     private SurfaceView surfaceView;
-
+    private BarcodeDetector barcodeDetector;
     /**
      * Instantiates a new Builder.
      *
@@ -238,6 +250,17 @@ public class QREader {
       this.qrDataListener = qrDataListener;
       this.context = context;
       this.surfaceView = surfaceView;
+    }
+
+    public Builder(BarcodeDetector detector, QRDataListener qrDataListener, Context context, SurfaceView surfaceView) {
+      this.barcodeDetector = detector;
+      this.qrDataListener = qrDataListener;
+      this.context = context;
+      this.surfaceView = surfaceView;
+      this.autofocusEnabled = true;
+      this.width = 800;
+      this.height = 800;
+      this.facing = BACK_CAM;
     }
 
     /**
@@ -291,6 +314,10 @@ public class QREader {
      */
     public QREader build() {
       return new QREader(this);
+    }
+
+    public void setBarcodeDetector(BarcodeDetector barcodeDetector) {
+      this.barcodeDetector = barcodeDetector;
     }
   }
 }
