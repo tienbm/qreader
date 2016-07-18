@@ -93,11 +93,11 @@ public class QREader {
     this.qrDataListener = builder.qrDataListener;
     this.context = builder.context;
     this.surfaceView = builder.surfaceView;
-    this.barcodeDetector = builder.barcodeDetector;
     //for better performance we should use one detector for all Reader, if builder not specify it
-    this.barcodeDetector = builder.barcodeDetector;
-    if (barcodeDetector == null)
+    if (builder.barcodeDetector == null)
       this.barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(context);
+    else
+      this.barcodeDetector = builder.barcodeDetector;
   }
 
   public boolean isCameraRunning() {
@@ -121,8 +121,6 @@ public class QREader {
       Log.e(LOGTAG, "Do not have camera permission!");
       return;
     }
-
-
 
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
@@ -252,17 +250,6 @@ public class QREader {
       this.surfaceView = surfaceView;
     }
 
-    public Builder(BarcodeDetector detector, QRDataListener qrDataListener, Context context, SurfaceView surfaceView) {
-      this.barcodeDetector = detector;
-      this.qrDataListener = qrDataListener;
-      this.context = context;
-      this.surfaceView = surfaceView;
-      this.autofocusEnabled = true;
-      this.width = 800;
-      this.height = 800;
-      this.facing = BACK_CAM;
-    }
-
     /**
      * Enable autofocus builder.
      *
@@ -316,7 +303,7 @@ public class QREader {
       return new QREader(this);
     }
 
-    public void setBarcodeDetector(BarcodeDetector barcodeDetector) {
+    public void barcodeDetector(BarcodeDetector barcodeDetector) {
       this.barcodeDetector = barcodeDetector;
     }
   }
