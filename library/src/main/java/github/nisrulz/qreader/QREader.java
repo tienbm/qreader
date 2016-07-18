@@ -86,7 +86,7 @@ public class QREader {
    * @param builder the builder
    */
   public QREader(final Builder builder) {
-    this.autofocusEnabled = builder.autofocusEnabled;
+    this.autoFocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
     this.facing = builder.facing;

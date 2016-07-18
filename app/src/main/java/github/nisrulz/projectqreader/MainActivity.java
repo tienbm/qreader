@@ -67,29 +67,7 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
         startActivity(new Intent(MainActivity.this, MainActivity.class));
       }
     });
-    btn_startstop.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
 
-        if (!active) {
-          active = true;
-          // Implement QRReader activate code
-
-          qrEader = new QREader.Builder(MainActivity.this, surfaceView, new QRDataListener() {
-            @Override public void onDetected(final String data) {
-              Log.d("QREader", "Value : " + data);
-              textView_qrcode_info.post(new Runnable() {
-                @Override public void run() {
-                  textView_qrcode_info.setText(data);
-                }
-              });
-            }
-          }).facing(QREader.BACK_CAM).enableAutofocus(true).height(800).width(800).build();
-
-          qrEader.init();
-          qrEader.start();
-        } else {
-          active = false;
-          // Implement QRReader deactivate code
     qrEader.start();
 
     // change of reader state in dynamic
