@@ -89,6 +89,9 @@ public class QREader {
    * @param builder the builder
    */
   public QREader(final Builder builder) {
+    if (barcodeDetector == null)
+      barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(builder.context);
+
     this.autofocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
@@ -98,8 +101,7 @@ public class QREader {
     this.surfaceView = builder.surfaceView;
     this.barcodeDetector = builder.barcodeDetector;
     //for better performance we should use one detector for all Reader, if builder not specify it
-    if (barcodeDetector == null)
-       barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(context);
+
   }
 
   /**
