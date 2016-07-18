@@ -101,7 +101,9 @@ public class QREader {
     this.surfaceView = builder.surfaceView;
     this.barcodeDetector = builder.barcodeDetector;
     //for better performance we should use one detector for all Reader, if builder not specify it
-
+    this.barcodeDetector = builder.barcodeDetector;
+    if (barcodeDetector == null)
+      this.barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(context);
   }
 
   /**

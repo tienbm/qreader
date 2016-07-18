@@ -16,6 +16,7 @@
 
 package github.nisrulz.projectqreader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -55,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
     qrEader.init();
 
+    findViewById(R.id.new_activity).setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        startActivity(new Intent(MainActivity.this, MainActivity.class));
+      }
+    });
     btn_startstop.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
 
@@ -93,11 +99,14 @@ public class MainActivity extends AppCompatActivity {
     qrEader.start();
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-
+  @Override protected void onStop() {
+    super.onStop();
     // Call in onDestroy
     qrEader.stop();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
     qrEader.releaseAndCleanup();
   }
 }
