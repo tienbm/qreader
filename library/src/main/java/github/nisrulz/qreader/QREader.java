@@ -65,10 +65,8 @@ public class QREader {
       startCameraView(context, cameraSource, surfaceView);
     }
 
-
     @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
     }
-
 
     @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
       surfaceCreated = false;
@@ -110,7 +108,8 @@ public class QREader {
     }
 
     // Setup Barcodedetector
-    BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
+    BarcodeDetector barcodeDetector =
+        new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
 
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
@@ -127,8 +126,7 @@ public class QREader {
       });
 
       cameraSource =
-          new CameraSource.Builder(context, barcodeDetector)
-              .setAutoFocusEnabled(autoFocusEnabled)
+          new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
               .setFacing(facing)
               .setRequestedPreviewSize(width, height)
               .build();
@@ -153,9 +151,8 @@ public class QREader {
   }
 
   private void startCameraView(Context context, CameraSource cameraSource,
-                               SurfaceView surfaceView) {
-    if (cameraRunning)
-      throw new IllegalStateException("Camera already started!");
+      SurfaceView surfaceView) {
+    if (cameraRunning) throw new IllegalStateException("Camera already started!");
     try {
       if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
           != PackageManager.PERMISSION_GRANTED) {
