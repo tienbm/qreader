@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
@@ -93,5 +95,9 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
         text.setText(data);
       }
     });
+  }
+
+  @Override public void onReadQrError(final Exception exception) {
+    Toast.makeText(this, "Cannot open camera", Toast.LENGTH_LONG).show();
   }
 }

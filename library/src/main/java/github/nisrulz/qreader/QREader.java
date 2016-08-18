@@ -62,7 +62,13 @@ public class QREader {
     @Override public void surfaceCreated(SurfaceHolder surfaceHolder) {
       //we can start barcode after after creating
       surfaceCreated = true;
-      startCameraView(context, cameraSource, surfaceView);
+      try {
+        startCameraView(context, cameraSource, surfaceView);
+      } catch (Exception e) {
+        surfaceCreated = false;
+        stop();
+        qrDataListener.onReadQrError(e);
+      }
     }
 
     @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
