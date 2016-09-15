@@ -60,25 +60,32 @@ public class QREader {
   private boolean surfaceCreated = false;
 
   private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
-    @Override public void surfaceCreated(SurfaceHolder surfaceHolder) {
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
       //we can start barcode after after creating
       surfaceCreated = true;
       startCameraView(context, cameraSource, surfaceView);
     }
 
-
-    @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
     }
 
-
-    @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
       surfaceCreated = false;
       stop();
       surfaceHolder.removeCallback(this);
     }
   };
 
-  /*
+  /**
+   * Instantiates a new Qr eader.
+   *
+   * @param builder
+   *     the builder
+   */
+/*
    * Instantiates a new Qr eader.
    *
    * @param builder the builder
@@ -92,12 +99,19 @@ public class QREader {
     this.context = builder.context;
     this.surfaceView = builder.surfaceView;
     //for better performance we should use one detector for all Reader, if builder not specify it
-    if (builder.barcodeDetector == null)
+    if (builder.barcodeDetector == null) {
       this.barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(context);
-    else
+    }
+    else {
       this.barcodeDetector = builder.barcodeDetector;
+    }
   }
 
+  /**
+   * Is camera running boolean.
+   *
+   * @return the boolean
+   */
   public boolean isCameraRunning() {
     return cameraRunning;
   }
@@ -122,11 +136,13 @@ public class QREader {
 
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-        @Override public void release() {
+        @Override
+        public void release() {
           // Handled via public method
         }
 
-        @Override public void receiveDetections(Detector.Detections<Barcode> detections) {
+        @Override
+        public void receiveDetections(Detector.Detections<Barcode> detections) {
           final SparseArray<Barcode> barcodes = detections.getDetectedItems();
           if (barcodes.size() != 0 && qrDataListener != null) {
             qrDataListener.onDetected(barcodes.valueAt(0).displayValue);
@@ -135,12 +151,12 @@ public class QREader {
       });
 
       cameraSource =
-          new CameraSource.Builder(context, barcodeDetector)
-              .setAutoFocusEnabled(autoFocusEnabled)
+          new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
               .setFacing(facing)
               .setRequestedPreviewSize(width, height)
               .build();
-    } else {
+    }
+    else {
       Log.e(LOGTAG, "Barcode recognition libs are not downloaded and are not operational");
     }
   }
@@ -153,7 +169,8 @@ public class QREader {
       //if surface already created, we can start camera
       if (surfaceCreated) {
         startCameraView(context, cameraSource, surfaceView);
-      } else {
+      }
+      else {
         //startCameraView will be invoke in void surfaceCreated
         surfaceView.getHolder().addCallback(surfaceHolderCallback);
       }
@@ -161,14 +178,16 @@ public class QREader {
   }
 
   private void startCameraView(Context context, CameraSource cameraSource,
-                               SurfaceView surfaceView) {
-    if (cameraRunning)
+      SurfaceView surfaceView) {
+    if (cameraRunning) {
       throw new IllegalStateException("Camera already started!");
+    }
     try {
       if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
           != PackageManager.PERMISSION_GRANTED) {
         Log.e(LOGTAG, "Permission not granted!");
-      } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
+      }
+      else if (!cameraRunning && cameraSource != null && surfaceView != null) {
         cameraSource.start(surfaceView.getHolder());
         cameraRunning = true;
       }
@@ -231,12 +250,16 @@ public class QREader {
     private Context context;
     private SurfaceView surfaceView;
     private BarcodeDetector barcodeDetector;
+
     /**
      * Instantiates a new Builder.
      *
-     * @param context the context
-     * @param surfaceView the surface view
-     * @param qrDataListener the qr data listener
+     * @param context
+     *     the context
+     * @param surfaceView
+     *     the surface view
+     * @param qrDataListener
+     *     the qr data listener
      */
     public Builder(Context context, SurfaceView surfaceView, QRDataListener qrDataListener) {
       this.autofocusEnabled = true;
@@ -251,7 +274,8 @@ public class QREader {
     /**
      * Enable autofocus builder.
      *
-     * @param autofocusEnabled the autofocus enabled
+     * @param autofocusEnabled
+     *     the autofocus enabled
      * @return the builder
      */
     public Builder enableAutofocus(boolean autofocusEnabled) {
@@ -262,7 +286,8 @@ public class QREader {
     /**
      * Width builder.
      *
-     * @param width the width
+     * @param width
+     *     the width
      * @return the builder
      */
     public Builder width(int width) {
@@ -273,7 +298,8 @@ public class QREader {
     /**
      * Height builder.
      *
-     * @param height the height
+     * @param height
+     *     the height
      * @return the builder
      */
     public Builder height(int height) {
@@ -284,7 +310,8 @@ public class QREader {
     /**
      * Facing builder.
      *
-     * @param facing the facing
+     * @param facing
+     *     the facing
      * @return the builder
      */
     public Builder facing(int facing) {
@@ -301,6 +328,12 @@ public class QREader {
       return new QREader(this);
     }
 
+    /**
+     * Barcode detector.
+     *
+     * @param barcodeDetector
+     *     the barcode detector
+     */
     public void barcodeDetector(BarcodeDetector barcodeDetector) {
       this.barcodeDetector = barcodeDetector;
     }
