@@ -16,6 +16,7 @@
 
 package github.nisrulz.projectqreader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -55,6 +56,13 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
     qrEader = new QREader.Builder(MainActivity.this, surfaceView, MainActivity.this).facing(
         QREader.BACK_CAM).enableAutofocus(true).height(previewHeight).width(previewWidth).build();
     qrEader.init();
+
+    findViewById(R.id.new_activity).setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        startActivity(new Intent(MainActivity.this, MainActivity.class));
+      }
+    });
+
     qrEader.start();
 
     // change of reader state in dynamic
