@@ -20,7 +20,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         minSdkVersion 9
@@ -40,7 +40,7 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     // Add Vision API
-    compile "com.google.android.gms:play-services-vision:9.2.1"
+    compile "com.google.android.gms:play-services-vision:9.4.0"
 }
 
 // Place this in the 'build.gradle' of the library module
