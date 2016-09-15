@@ -36,6 +36,7 @@ import java.io.IOException;
 public class QREader {
   private static final String LOGTAG = "QREader";
   private CameraSource cameraSource = null;
+  private BarcodeDetector barcodeDetector = null;
 
   /**
    * The constant FRONT_CAM.
@@ -65,8 +66,10 @@ public class QREader {
       startCameraView(context, cameraSource, surfaceView);
     }
 
+
     @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
     }
+
 
     @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
       surfaceCreated = false;
@@ -75,7 +78,12 @@ public class QREader {
     }
   };
 
-  public QREader(Builder builder) {
+  /*
+   * Instantiates a new Qr eader.
+   *
+   * @param builder the builder
+   */
+  public QREader(final Builder builder) {
     this.autoFocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
@@ -83,6 +91,11 @@ public class QREader {
     this.qrDataListener = builder.qrDataListener;
     this.context = builder.context;
     this.surfaceView = builder.surfaceView;
+    //for better performance we should use one detector for all Reader, if builder not specify it
+    if (builder.barcodeDetector == null)
+      this.barcodeDetector = BarcodeDetectorHolder.getBarcodeDetector(context);
+    else
+      this.barcodeDetector = builder.barcodeDetector;
   }
 
   public boolean isCameraRunning() {
@@ -107,10 +120,6 @@ public class QREader {
       return;
     }
 
-    // Setup Barcodedetector
-    BarcodeDetector barcodeDetector =
-        new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.QR_CODE).build();
-
     if (barcodeDetector.isOperational()) {
       barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
         @Override public void release() {
@@ -126,7 +135,8 @@ public class QREader {
       });
 
       cameraSource =
-          new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
+          new CameraSource.Builder(context, barcodeDetector)
+              .setAutoFocusEnabled(autoFocusEnabled)
               .setFacing(facing)
               .setRequestedPreviewSize(width, height)
               .build();
@@ -151,8 +161,9 @@ public class QREader {
   }
 
   private void startCameraView(Context context, CameraSource cameraSource,
-      SurfaceView surfaceView) {
-    if (cameraRunning) throw new IllegalStateException("Camera already started!");
+                               SurfaceView surfaceView) {
+    if (cameraRunning)
+      throw new IllegalStateException("Camera already started!");
     try {
       if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
           != PackageManager.PERMISSION_GRANTED) {
@@ -219,7 +230,7 @@ public class QREader {
     private QRDataListener qrDataListener;
     private Context context;
     private SurfaceView surfaceView;
-
+    private BarcodeDetector barcodeDetector;
     /**
      * Instantiates a new Builder.
      *
@@ -288,6 +299,10 @@ public class QREader {
      */
     public QREader build() {
       return new QREader(this);
+    }
+
+    public void barcodeDetector(BarcodeDetector barcodeDetector) {
+      this.barcodeDetector = barcodeDetector;
     }
   }
 }
