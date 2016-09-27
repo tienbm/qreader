@@ -16,7 +16,6 @@
  */
 
 apply plugin: 'com.android.library'
-//apply from: 'https://raw.github.com/nisrulz/gradle-mvn-push/master/gradle-mvn-push.gradle'
 
 android {
     compileSdkVersion 24
@@ -40,14 +39,5 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     // Add Vision API
-    compile "com.google.android.gms:play-services-vision:9.4.0"
-}
-
-// Place this in the 'build.gradle' of the library module
-// Task : Generate a JAR
-// Usage : In the terminal, run './gradlew jar'
-// Output : Get the jar at 'build/libs'
-
-task jar(type: Jar, dependsOn: 'assembleRelease') {
-    from fileTree(dir: 'build/intermediates/classes/release')
+    compile "com.google.android.gms:play-services-vision:9.6.1"
 }
