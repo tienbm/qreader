@@ -16,7 +16,9 @@
 
 package github.nisrulz.projectqreader;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,22 +36,35 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
   private Button stateBtn;
   private QREader qrEader;
 
-  @Override protected void onCreate(final Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
     surfaceView = (SurfaceView) findViewById(R.id.camera_view);
     text = (TextView) findViewById(R.id.code_info);
-    stateBtn = (Button) findViewById(R.id.state_btn);
+    stateBtn = (Button) findViewById(R.id.btn_start_stop);
 
     surfaceView.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override public void onGlobalLayout() {
+          @Override
+          public void onGlobalLayout() {
             //to pass surfaceView size to camera preview
             initAndStartQrReader(surfaceView.getWidth(), surfaceView.getHeight());
-            surfaceView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            removeOnGlobalLayoutListener(surfaceView, this);
           }
         });
+  }
+
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+  public static void removeOnGlobalLayoutListener(View v,
+      ViewTreeObserver.OnGlobalLayoutListener listener) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+      v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+    }
+    else {
+      v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+    }
   }
 
   private void initAndStartQrReader(int previewWidth, int previewHeight) {
@@ -57,9 +72,11 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
         QREader.BACK_CAM).enableAutofocus(true).height(previewHeight).width(previewWidth).build();
     qrEader.init();
 
-    findViewById(R.id.new_activity).setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+    findViewById(R.id.btn_restart_activity).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
         startActivity(new Intent(MainActivity.this, MainActivity.class));
+        finish();
       }
     });
 
@@ -67,10 +84,12 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
 
     // change of reader state in dynamic
     stateBtn.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+      @Override
+      public void onClick(View v) {
         if (qrEader.isCameraRunning()) {
           qrEader.stop();
-        } else {
+        }
+        else {
           qrEader.start();
         }
       }
@@ -78,26 +97,37 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
     stateBtn.setVisibility(View.VISIBLE);
   }
 
-  @Override protected void onResume() {
+  @Override
+  protected void onResume() {
     super.onResume();
-    if (qrEader != null) qrEader.start();
+    if (qrEader != null) {
+      qrEader.start();
+    }
   }
 
-  @Override protected void onPause() {
+  @Override
+  protected void onPause() {
     super.onPause();
-    if (qrEader != null) qrEader.stop();
+    if (qrEader != null) {
+      qrEader.stop();
+    }
   }
 
-  @Override protected void onDestroy() {
+  @Override
+  protected void onDestroy() {
     super.onDestroy();
     //free resources of camera and google barcode decoder
-    if (qrEader != null) qrEader.releaseAndCleanup();
+    if (qrEader != null) {
+      qrEader.releaseAndCleanup();
+    }
   }
 
-  @Override public void onDetected(final String data) {
+  @Override
+  public void onDetected(final String data) {
     Log.d("QREader", "Value : " + data);
     text.post(new Runnable() {
-      @Override public void run() {
+      @Override
+      public void run() {
         text.setText(data);
       }
     });
