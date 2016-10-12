@@ -16,48 +16,51 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
->
-    <SurfaceView
-            android:id="@+id/camera_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/info"
-    />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    >
+  <SurfaceView
+      android:id="@+id/camera_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/info"
+      />
 
-    <LinearLayout
-            android:id="@+id/info"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-        <TextView
-                android:id="@+id/code_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Point the camera view to a QR Code to read the information"
-                android:textSize="20sp"
+  <LinearLayout
+      android:id="@+id/info"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:orientation="vertical"
+      >
+    <TextView
+        android:id="@+id/code_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Point the camera view to a QR Code to read the information"
+        android:textSize="20sp"
         />
-        <Button
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/state_btn"
-                android:text="Stop/Start reader"
-                android:visibility="gone"
-                android:layout_margin="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btn_start_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp"
+        android:text="Stop/Start reader"
+        />
 
 
-        <Button android:id="@+id/new_activity"
-                android:text="new activity"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btn_restart_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Restart Activity"
+        />
 
 
-    </LinearLayout>
+  </LinearLayout>
 </RelativeLayout>
