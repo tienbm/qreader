@@ -21,14 +21,14 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.1'
+    classpath 'com.android.tools.build:gradle:2.2.2'
 
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
 
     // Required plugins added to classpath to facilitate pushing to Jcenter/Bintray
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-    classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
   }
 }
 
@@ -40,4 +40,22 @@ allprojects {
 
 task clean(type: Delete) {
   delete rootProject.buildDir
+}
+
+
+ext {
+  //Other
+  supportLibVersion = '25.0.1'
+  playServicesVersion = '10.0.0'
+
+  // Library Info
+  libVersionCode = 7
+  libVersionName = '1.0.6'
+  libPomUrl = 'https://github.com/nisrulz/qreader'
+  libGithubRepo = 'nisrulz/qreader'
+
+
+  libModuleName = 'qreader'
+  libModuleDesc = 'Android library that uses google\'s mobile vision api and simplify the QR code reading process'
+  libBintrayName = 'com.github.nisrulz:qreader'
 }
