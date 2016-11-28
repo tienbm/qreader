@@ -67,16 +67,15 @@ public class MainActivity extends AppCompatActivity {
         finish();
       }
     });
-  }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
 
     // Setup SurfaceView
+    // -----------------
     mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
+
     // Init QREader
-    qrEader = new QREader.Builder(MainActivity.this, mySurfaceView, new QRDataListener() {
+    // ------------
+    qrEader = new QREader.Builder(this, mySurfaceView, new QRDataListener() {
       @Override
       public void onDetected(final String data) {
         Log.d("QREader", "Value : " + data);
@@ -92,8 +91,14 @@ public class MainActivity extends AppCompatActivity {
         .height(mySurfaceView.getHeight())
         .width(mySurfaceView.getWidth())
         .build();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
 
     // Init and Start with SurfaceView
+    // -------------------------------
     qrEader.initAndStart(mySurfaceView);
   }
 
@@ -102,14 +107,7 @@ public class MainActivity extends AppCompatActivity {
     super.onPause();
 
     // Cleanup in onPause()
-    qrEader.releaseAndCleanup();
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-
-    // Cleanup in onDestroy()
+    // --------------------
     qrEader.releaseAndCleanup();
   }
 }
