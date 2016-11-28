@@ -17,13 +17,17 @@
 package github.nisrulz.qreader;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -34,7 +38,7 @@ import java.io.IOException;
  * QREader Singleton.
  */
 public class QREader {
-  private static final String LOGTAG = "QREader";
+  private final String LOGTAG = getClass().getSimpleName();
   private CameraSource cameraSource = null;
   private BarcodeDetector barcodeDetector = null;
 
@@ -59,6 +63,30 @@ public class QREader {
 
   private boolean surfaceCreated = false;
 
+  public void startSurfaceView(final SurfaceView surfaceView) {
+
+    surfaceView.getViewTreeObserver()
+        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+          @Override
+          public void onGlobalLayout() {
+            init();
+            start();
+            removeOnGlobalLayoutListener(surfaceView, this);
+          }
+        });
+  }
+
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+  public static void removeOnGlobalLayoutListener(View v,
+      ViewTreeObserver.OnGlobalLayoutListener listener) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+      v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+    }
+    else {
+      v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+    }
+  }
+
   private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -80,13 +108,13 @@ public class QREader {
   };
 
   /**
-   * Instantiates a new Qr eader.
+   * Instantiates a new QREader.
    *
    * @param builder
    *     the builder
    */
 /*
-   * Instantiates a new Qr eader.
+   * Instantiates a new QREader
    *
    * @param builder the builder
    */
@@ -213,7 +241,7 @@ public class QREader {
   }
 
   /**
-   * Release and cleanup qreader.
+   * Release and cleanup QREader.
    */
   public void releaseAndCleanup() {
     stop();
@@ -291,7 +319,9 @@ public class QREader {
      * @return the builder
      */
     public Builder width(int width) {
-      this.width = width;
+      if (width != 0) {
+        this.width = width;
+      }
       return this;
     }
 
@@ -303,7 +333,9 @@ public class QREader {
      * @return the builder
      */
     public Builder height(int height) {
-      this.height = height;
+      if (height != 0) {
+        this.height = height;
+      }
       return this;
     }
 
@@ -320,9 +352,9 @@ public class QREader {
     }
 
     /**
-     * Build qr eader.
+     * Build QREader
      *
-     * @return the qr eader
+     * @return the QREader
      */
     public QREader build() {
       return new QREader(this);
