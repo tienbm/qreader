@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Qreader by nisrulz</title>
+    <title>QREader by nisrulz</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
@@ -17,7 +17,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Qreader</h1>
+        <h1>QREader</h1>
         <p>A library that uses google&#39;s mobile vision api and simplify the QR code reading process</p>
         <p class="view"><a href="https://github.com/nisrulz/qreader">View the Project on GitHub <small>nisrulz/qreader</small></a></p>
         <ul>
@@ -27,163 +27,175 @@
         </ul>
       </header>
       <section>
-        <h1>
-<a id="qreader" class="anchor" href="#qreader" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>QREader</h1>
+        <h3>
+<a id="specs" class="anchor" href="#specs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Specs</h3>
 
-<p><a href="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader"><img src="https://maven-badges.herokuapp.com/maven-central/com.github.nisrulz/qreader/badge.svg" alt="Maven Central"></a> <a href="https://android-arsenal.com/details/1/3478"><img src="https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true" alt="Android Arsenal"></a></p>
+<p><a href="https://android-arsenal.com/api?level=9"><img src="https://img.shields.io/badge/API-9%2B-orange.svg?style=flat" alt="API"></a></p>
 
-<p><a href="https://twitter.com/nisrulz"><img src="https://img.shields.io/twitter/follow/nisrulz.svg?style=social" alt="Twitter Follow"></a></p>
+<h3>
+<a id="badgesfeatured-in" class="anchor" href="#badgesfeatured-in" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Badges/Featured In</h3>
 
-<p>A library that uses google's mobile vision api and simplify the QR code reading process </p>
+<p><a href="https://android-arsenal.com/details/1/3478"><img src="https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true" alt="Android Arsenal"></a> </p>
+
+<h3>
+<a id="show-some-heart" class="anchor" href="#show-some-heart" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Show some <g-emoji alias="heart" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png" ios-version="6.0">❤️</g-emoji>
+</h3>
+
+<p><a href="https://github.com/nisrulz/qreader"><img src="https://img.shields.io/github/stars/nisrulz/qreader.svg?style=social&amp;label=Star" alt="GitHub stars"></a> <a href="https://github.com/nisrulz/qreader/fork"><img src="https://img.shields.io/github/forks/nisrulz/qreader.svg?style=social&amp;label=Fork" alt="GitHub forks"></a> <a href="https://github.com/nisrulz/qreader"><img src="https://img.shields.io/github/watchers/nisrulz/qreader.svg?style=social&amp;label=Watch" alt="GitHub watchers"></a> <a href="https://github.com/nisrulz/qreader"><img src="https://img.shields.io/github/followers/nisrulz.svg?style=social&amp;label=Follow" alt="GitHub followers"></a>
+<a href="https://twitter.com/nisrulz"><img src="https://img.shields.io/twitter/follow/nisrulz.svg?style=social" alt="Twitter Follow"></a></p>
+
+<p>Android library which makes use of Google's Mobile Vision API to enable reading QR Code.</p>
+
+<p>The library is built for simplicity and ease of use. It not only eliminates most boilerplate code for dealing with setting up QR Code reading , but also provides an easy and simple API to retrieve information from QR Code quickly.</p>
+
+<h1>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog</h1>
+
+<p>Starting with <code>1.0.4</code>, Changes exist in the <a href="https://github.com/nisrulz/qreader/releases">releases tab</a>.</p>
 
 <h1>
 <a id="integration" class="anchor" href="#integration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integration</h1>
 
-<ul>
-<li>QREader is available in the MavenCentral, so getting it as simple as adding it as a dependency</li>
-</ul>
+<p>QREader is available in the Jcenter, so getting it as simple as adding it as a dependency</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.github.nisrulz:qreader:1.0.6<span class="pl-pds">'</span></span></pre></div>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.github.nisrulz:qreader:{latest version}<span class="pl-pds">'</span></span></pre></div>
+
+<p>where <code>{latest version}</code> corresponds to published version in <a href="https://bintray.com/nisrulz/maven/com.github.nisrulz%3Aqreader/_latestVersion"> <img src="https://api.bintray.com/packages/nisrulz/maven/com.github.nisrulz%3Aqreader/images/download.svg" alt="Download"> </a></p>
 
 <h1>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
+<a id="usage-docs" class="anchor" href="#usage-docs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage Docs</h1>
 
-<ul>
-<li>First add a <code>SurfaceView</code> to your layout and give it an id</li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-k">&lt;</span><span class="pl-smi">SurfaceView</span>
-        android<span class="pl-k">:</span>id<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>@+id/camera_view<span class="pl-pds">"</span></span>
-        android<span class="pl-k">:</span>layout_width<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>320dp<span class="pl-pds">"</span></span>
-        android<span class="pl-k">:</span>layout_height<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>320dp<span class="pl-pds">"</span></span><span class="pl-k">/</span><span class="pl-k">&gt;</span></pre></div>
-
-<ul>
-<li>Then in your Activity code reference the <code>SurfaceView</code>
-</li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-smi">SurfaceView</span> surfaceView <span class="pl-k">=</span> (<span class="pl-smi">SurfaceView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>camera_view);</pre></div>
-
-<ul>
-<li>
-<p>Next create an object of <code>QREader</code> using the <code>Builder</code> in your <code>onCreate()</code></p>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-smi">QREader</span> qrEader;
-<span class="pl-c1">.</span>
-<span class="pl-c1">..</span>
-<span class="pl-c1">...</span>
- @<span class="pl-smi">Override</span> <span class="pl-k">protected</span> <span class="pl-k">void</span> onCreate(<span class="pl-smi">Bundle</span> savedInstanceState) {
-    <span class="pl-c1">..</span>
-
-    surfaceView <span class="pl-k">=</span> (<span class="pl-smi">SurfaceView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>camera_view);
-
-    qrEader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">QREader</span>.<span class="pl-smi">Builder</span>(<span class="pl-v">this</span>, surfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
-      <span class="pl-k">@Override</span> <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
-        <span class="pl-c">// Do something with the string data</span>
-
-        <span class="pl-smi">Log</span><span class="pl-k">.</span>d(<span class="pl-s"><span class="pl-pds">"</span>QREader<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Value : <span class="pl-pds">"</span></span> <span class="pl-k">+</span> data);
-      }
-    })<span class="pl-k">.</span>build();
-  }    </pre></div>
-
-<p><em>where</em> </p>
-
-<ul>
-<li>
-<code>Builder</code> takes in arguments as <code>Builder(context, surfaceview, qrdatalistner)</code>
-</li>
-<li>
-<strong>[Optional]</strong> To modify further you can call  below functions on the <code>Builder</code> before calling the <code>build()</code>
-
-<ul>
-<li>
-<code>enableAutofocus(boolean autofocus_enabled)</code>  // Default is <code>true</code>
-</li>
-<li>
-<code>width(int width)</code> // Default is <code>800</code>
-</li>
-<li>
-<code>height(int height)</code> // Default is <code>800</code>
-</li>
-<li>
-<code>facing(int facing)</code> // Default is <code>QREader.BACK_CAM</code>
-
-<ul>
-<li>where argument can be one of  <code>QREader.BACK_CAM</code> , <code>QREader.FRONT_CAM</code>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>Next Call <code>qrEader.init()</code>, right after you <code>build()</code> your object using the <code>Builder</code>.</p>
-
-<div class="highlight highlight-source-java"><pre> @<span class="pl-smi">Override</span> <span class="pl-k">protected</span> <span class="pl-k">void</span> onCreate(<span class="pl-smi">Bundle</span> savedInstanceState) {
-    <span class="pl-c1">..</span>
-
-    qrEader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">QREader</span>.<span class="pl-smi">Builder</span>(<span class="pl-v">this</span>, surfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
-      <span class="pl-k">@Override</span> <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
-        <span class="pl-c1">..</span>
-      }
-    })<span class="pl-k">.</span>build();
-
-    <span class="pl-c">// Call Init</span>
-    qrEader<span class="pl-k">.</span>init();
- }    </pre></div>
-</li>
-<li><p>To start QR code detection, call <code>start()</code> on the <code>qreader</code> object </p></li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>start();</pre></div>
-
-<ul>
-<li>To stop QR code detection, call <code>stop()</code> on the <code>qreader</code> object </li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>stop();</pre></div>
-
-<ul>
-<li>To release and cleanup , call <code>releaseAndCleanup()</code> on the <code>qreader</code> object </li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>releaseAndCleanup();</pre></div>
-
-<blockquote>
-<p>NOTE : </p>
+<h3>
+<a id="steps" class="anchor" href="#steps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Steps</h3>
 
 <ol>
-<li><p>The library uses <code>android.permission.CAMERA</code> permission implicitly. For Android 
-platforms Marshmallow and above you need to make sure the permission is requested during<br>
-runtime and granted for QREader to function.</p></li>
-<li><p>The <code>onDetected(final String data)</code> function call returns the data string on a different
-thread, so in order for you to show the result on the main thread you need to use a handler. </p></li>
-</ol>
-</blockquote>
+<li>
+<p>Add a <code>SurfaceView</code> to your layout</p>
 
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">SurfaceView</span>
+  <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/camera_view<span class="pl-pds">"</span></span>
+  <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_width</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+  <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_height</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+  <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_above</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/info<span class="pl-pds">"</span></span>
+  /&gt;</pre></div>
+</li>
+<li>
+<p>Setup <code>SurfaceView</code> and <code>QREader</code> in <code>onCreate()</code></p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// QREader</span>
+<span class="pl-k">private</span> <span class="pl-smi">SurfaceView</span> mySurfaceView;
+<span class="pl-k">private</span> <span class="pl-smi">QREader</span> qrEader;
+<span class="pl-c1">..</span>
+
+<span class="pl-k">@Override</span>
+<span class="pl-k">protected</span> <span class="pl-k">void</span> onCreate(<span class="pl-k">final</span> <span class="pl-smi">Bundle</span> savedInstanceState) {
+  <span class="pl-v">super</span><span class="pl-k">.</span>onCreate(savedInstanceState);
+  setContentView(<span class="pl-smi">R</span><span class="pl-k">.</span>layout<span class="pl-k">.</span>activity_main);
+  <span class="pl-c1">..</span>
+  <span class="pl-c1">..</span>
+
+  <span class="pl-c">// Setup SurfaceView</span>
+  <span class="pl-c">// -----------------</span>
+  mySurfaceView <span class="pl-k">=</span> (<span class="pl-smi">SurfaceView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>camera_view);
+
+  <span class="pl-c">// Init QREader</span>
+  <span class="pl-c">// ------------</span>
+  qrEader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">QREader</span>.<span class="pl-smi">Builder</span>(<span class="pl-v">this</span>, mySurfaceView, <span class="pl-k">new</span> <span class="pl-smi">QRDataListener</span>() {
+    <span class="pl-k">@Override</span>
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onDetected</span>(<span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-v">data</span>) {
+      <span class="pl-smi">Log</span><span class="pl-k">.</span>d(<span class="pl-s"><span class="pl-pds">"</span>QREader<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Value : <span class="pl-pds">"</span></span> <span class="pl-k">+</span> data);
+      text<span class="pl-k">.</span>post(<span class="pl-k">new</span> <span class="pl-smi">Runnable</span>() {
+        <span class="pl-k">@Override</span>
+        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">run</span>() {
+          text<span class="pl-k">.</span>setText(data);
+        }
+      });
+    }
+  })<span class="pl-k">.</span>facing(<span class="pl-smi">QREader</span><span class="pl-c1"><span class="pl-k">.</span>BACK_CAM</span>)
+      .enableAutofocus(<span class="pl-c1">true</span>)
+      .height(mySurfaceView<span class="pl-k">.</span>getHeight())
+      .width(mySurfaceView<span class="pl-k">.</span>getWidth())
+      .build();
+
+}</pre></div>
+</li>
+<li>
+<p>Initialize and Start in <code>onResume()</code></p>
+
+<div class="highlight highlight-source-java"><pre>  <span class="pl-k">@Override</span>
+  <span class="pl-k">protected</span> <span class="pl-k">void</span> onResume() {
+    <span class="pl-v">super</span><span class="pl-k">.</span>onResume();
+
+    <span class="pl-c">// Init and Start with SurfaceView</span>
+    <span class="pl-c">// -------------------------------</span>
+    qrEader<span class="pl-k">.</span>initAndStart(mySurfaceView);
+  }</pre></div>
+</li>
+<li>
+<p>Cleanup in <code>onPause()</code></p>
+
+<div class="highlight highlight-source-java"><pre>  <span class="pl-k">@Override</span>
+  <span class="pl-k">protected</span> <span class="pl-k">void</span> onPause() {
+    <span class="pl-v">super</span><span class="pl-k">.</span>onPause();
+
+    <span class="pl-c">// Cleanup in onPause()</span>
+    <span class="pl-c">// --------------------</span>
+    qrEader<span class="pl-k">.</span>releaseAndCleanup();
+  }</pre></div>
+</li>
+<li>
+<p>Some provided utility functions which you can use</p>
+
+<ul>
+<li>
+<p>To check if the camera is running</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">boolean</span> isCameraRunning <span class="pl-k">=</span> qrEader<span class="pl-k">.</span>isCameraRunning()</pre></div>
+</li>
+<li>
+<p>To stop <code>QREader</code></p>
+
+<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>stop();</pre></div>
+</li>
+<li>
+<p>To start <code>QREader</code></p>
+
+<div class="highlight highlight-source-java"><pre>qrEader<span class="pl-k">.</span>start();</pre></div>
+</li>
+</ul>
+
+<blockquote>
 <h5>
-<a id="checkout-the-sample-app-for-implementation" class="anchor" href="#checkout-the-sample-app-for-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Checkout the sample app for implementation</h5>
-
-<p>P.S : You can use this nice <a href="https://www.the-qrcode-generator.com/">QR Code generator</a> to test.</p>
+<a id="check-the-included-sample-app-for-a-working-example" class="anchor" href="#check-the-included-sample-app-for-a-working-example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check the included sample app for a working example.</h5>
+</blockquote>
+</li>
+</ol>
 
 <h1>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
+<a id="pull-requests" class="anchor" href="#pull-requests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pull Requests</h1>
 
-<pre><code>Copyright 2016 Nishant Srivastava
+<p>I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request. Here are some basic rules to follow to ensure timely addition of your request:</p>
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+<ol>
+<li>Match coding style (braces, spacing, etc.) This is best achieved using CMD+Option+L (Reformat code) on Mac (not sure for Windows) with Android Studio defaults.</li>
+<li>If its a feature, bugfix, or anything please only change code to what you specify.</li>
+<li>Please keep PR titles easy to read and descriptive of changes, this will make them easier to merge :)</li>
+<li>Pull requests <em>must</em> be made against <code>develop</code> branch. Any other branch (unless specified by the maintainers) will get rejected.</li>
+<li>Check for existing <a href="https://github.com/nisrulz/qreader/issues">issues</a> first, before filing an issue.<br>
+</li>
+<li>Have fun!</li>
+</ol>
 
-   http://www.apache.org/licenses/LICENSE-2.0
+<h3>
+<a id="created--maintained-by" class="anchor" href="#created--maintained-by" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Created &amp; Maintained By</h3>
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-</code></pre>
+<p><a href="https://github.com/nisrulz">Nishant Srivastava</a> (<a href="https://www.twitter.com/nisrulz">@nisrulz</a>)</p>
+
+<blockquote>
+<p>If you found this library helpful or you learned something from the source code and want to thank me, consider buying me a cup of <g-emoji alias="coffee" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/2615.png" ios-version="6.0">☕️</g-emoji></p>
+
+<p><a href="https://ko-fi.com/A443EQ6"><img height="36" src="https://az743702.vo.msecnd.net/cdn/kofi1.png?v=f" border="0" alt="Buy Me a Coffee at ko-fi.com"></a></p>
+</blockquote>
       </section>
     </div>
     <footer>
