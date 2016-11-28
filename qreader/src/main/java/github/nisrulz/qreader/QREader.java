@@ -63,7 +63,7 @@ public class QREader {
 
   private boolean surfaceCreated = false;
 
-  public void startSurfaceView(final SurfaceView surfaceView) {
+  public void initAndStart(final SurfaceView surfaceView) {
 
     surfaceView.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

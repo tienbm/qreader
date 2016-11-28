@@ -27,13 +27,14 @@ import android.widget.TextView;
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
-public class MainActivity extends AppCompatActivity implements QRDataListener {
-  private SurfaceView surfaceView;
+public class MainActivity extends AppCompatActivity {
+  // UI
   private TextView text;
-  private Button stateBtn;
-  private QREader qrEader;
+  private Button stateBtn, restartbtn;
 
-  private static final String TAG = "MainActivity";
+  // QREader
+  private SurfaceView mySurfaceView;
+  private QREader qrEader;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -41,16 +42,8 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
     setContentView(R.layout.activity_main);
 
     text = (TextView) findViewById(R.id.code_info);
+
     stateBtn = (Button) findViewById(R.id.btn_start_stop);
-
-    findViewById(R.id.btn_restart_activity).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        startActivity(new Intent(MainActivity.this, MainActivity.class));
-        finish();
-      }
-    });
-
     // change of reader state in dynamic
     stateBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -63,48 +56,60 @@ public class MainActivity extends AppCompatActivity implements QRDataListener {
         }
       }
     });
+
     stateBtn.setVisibility(View.VISIBLE);
+
+    restartbtn = (Button) findViewById(R.id.btn_restart_activity);
+    restartbtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startActivity(new Intent(MainActivity.this, MainActivity.class));
+        finish();
+      }
+    });
   }
 
   @Override
   protected void onResume() {
     super.onResume();
 
-    surfaceView = (SurfaceView) findViewById(R.id.camera_view);
-    qrEader = new QREader.Builder(this, surfaceView, this).facing(QREader.BACK_CAM)
+    // Setup SurfaceView
+    mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
+    // Init QREader
+    qrEader = new QREader.Builder(MainActivity.this, mySurfaceView, new QRDataListener() {
+      @Override
+      public void onDetected(final String data) {
+        Log.d("QREader", "Value : " + data);
+        text.post(new Runnable() {
+          @Override
+          public void run() {
+            text.setText(data);
+          }
+        });
+      }
+    }).facing(QREader.BACK_CAM)
         .enableAutofocus(true)
-        .height(surfaceView.getHeight())
-        .width(surfaceView.getWidth())
+        .height(mySurfaceView.getHeight())
+        .width(mySurfaceView.getWidth())
         .build();
 
-    qrEader.startSurfaceView(surfaceView);
+    // Init and Start with SurfaceView
+    qrEader.initAndStart(mySurfaceView);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
 
-    //free resources of camera and google barcode decoder
-    qrEader.stop();
+    // Cleanup in onPause()
     qrEader.releaseAndCleanup();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    //free resources of camera and google barcode decoder
-    qrEader.stop();
-    qrEader.releaseAndCleanup();
-  }
 
-  @Override
-  public void onDetected(final String data) {
-    Log.d("QREader", "Value : " + data);
-    text.post(new Runnable() {
-      @Override
-      public void run() {
-        text.setText(data);
-      }
-    });
+    // Cleanup in onDestroy()
+    qrEader.releaseAndCleanup();
   }
 }
