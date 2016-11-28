@@ -30,7 +30,6 @@ import github.nisrulz.qreader.QREader;
 public class MainActivity extends AppCompatActivity {
   // UI
   private TextView text;
-  private Button stateBtn, restartbtn;
 
   // QREader
   private SurfaceView mySurfaceView;
@@ -43,15 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
     text = (TextView) findViewById(R.id.code_info);
 
-    stateBtn = (Button) findViewById(R.id.btn_start_stop);
+    final Button stateBtn = (Button) findViewById(R.id.btn_start_stop);
     // change of reader state in dynamic
     stateBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         if (qrEader.isCameraRunning()) {
+          stateBtn.setText("Start QREader");
           qrEader.stop();
         }
         else {
+          stateBtn.setText("Stop QREader");
           qrEader.start();
         }
       }
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     stateBtn.setVisibility(View.VISIBLE);
 
-    restartbtn = (Button) findViewById(R.id.btn_restart_activity);
+    Button restartbtn = (Button) findViewById(R.id.btn_restart_activity);
     restartbtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {

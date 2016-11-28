@@ -77,7 +77,7 @@ public class QREader {
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-  public static void removeOnGlobalLayoutListener(View v,
+  private static void removeOnGlobalLayoutListener(View v,
       ViewTreeObserver.OnGlobalLayoutListener listener) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
       v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
@@ -87,7 +87,7 @@ public class QREader {
     }
   }
 
-  private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
+  private final SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
       //we can start barcode after after creating
@@ -118,7 +118,7 @@ public class QREader {
    *
    * @param builder the builder
    */
-  public QREader(final Builder builder) {
+  private QREader(final Builder builder) {
     this.autoFocusEnabled = builder.autofocusEnabled;
     this.width = builder.width;
     this.height = builder.height;
@@ -147,7 +147,7 @@ public class QREader {
   /**
    * Init.
    */
-  public void init() {
+  private void init() {
     if (!hasAutofocus(context)) {
       Log.e(LOGTAG, "Do not have autofocus feature, disabling autofocus feature in the library!");
       autoFocusEnabled = false;
@@ -274,9 +274,9 @@ public class QREader {
     private int width;
     private int height;
     private int facing;
-    private QRDataListener qrDataListener;
-    private Context context;
-    private SurfaceView surfaceView;
+    private final QRDataListener qrDataListener;
+    private final Context context;
+    private final SurfaceView surfaceView;
     private BarcodeDetector barcodeDetector;
 
     /**

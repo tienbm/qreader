@@ -26,9 +26,22 @@ compile 'com.github.nisrulz:qreader:{latest version}'
 where `{latest version}` corresponds to published version in [ ![Download](https://api.bintray.com/packages/nisrulz/maven/com.github.nisrulz%3Aqreader/images/download.svg) ](https://bintray.com/nisrulz/maven/com.github.nisrulz%3Aqreader/_latestVersion)
 
 
-# Usage Docs/Wiki
+# Usage Docs
 
-+ Setup `SurfaceView` and `QREader` in `onCreate()`
+### Steps
+
+1. Add a `SurfaceView` to your layout
+
+  ```xml
+  <SurfaceView
+    android:id="@+id/camera_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/info"
+    />
+  ```
+
+1. Setup `SurfaceView` and `QREader` in `onCreate()`
 
   ```java
   // QREader
@@ -69,7 +82,7 @@ where `{latest version}` corresponds to published version in [ ![Download](https
   }
   ```
 
-+ Initialize and Start in `onResume()`
+1. Initialize and Start in `onResume()`
 
   ```java
     @Override
@@ -81,7 +94,7 @@ where `{latest version}` corresponds to published version in [ ![Download](https
       qrEader.initAndStart(mySurfaceView);
     }
   ```
-+ Cleanup in `onPause()`
+1. Cleanup in `onPause()`
 
   ```java
     @Override
@@ -93,7 +106,7 @@ where `{latest version}` corresponds to published version in [ ![Download](https
       qrEader.releaseAndCleanup();
     }
   ```
-+ Some provided utility functions which you can use
+1. Some provided utility functions which you can use
   + To check if the camera is running
 
     ```java
