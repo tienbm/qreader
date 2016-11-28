@@ -27,7 +27,91 @@ where `{latest version}` corresponds to published version in [ ![Download](https
 
 
 # Usage Docs/Wiki
-For more detailed usage, check the [Wiki](https://github.com/nisrulz/qreader/wiki)
+
++ Setup `SurfaceView` and `QREader` in `onCreate()`
+
+  ```java
+  // QREader
+  private SurfaceView mySurfaceView;
+  private QREader qrEader;
+  ..
+
+  @Override
+  protected void onCreate(final Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    ..
+    ..
+
+    // Setup SurfaceView
+    // -----------------
+    mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
+
+    // Init QREader
+    // ------------
+    qrEader = new QREader.Builder(this, mySurfaceView, new QRDataListener() {
+      @Override
+      public void onDetected(final String data) {
+        Log.d("QREader", "Value : " + data);
+        text.post(new Runnable() {
+          @Override
+          public void run() {
+            text.setText(data);
+          }
+        });
+      }
+    }).facing(QREader.BACK_CAM)
+        .enableAutofocus(true)
+        .height(mySurfaceView.getHeight())
+        .width(mySurfaceView.getWidth())
+        .build();
+
+  }
+  ```
+
++ Initialize and Start in `onResume()`
+
+  ```java
+    @Override
+    protected void onResume() {
+      super.onResume();
+
+      // Init and Start with SurfaceView
+      // -------------------------------
+      qrEader.initAndStart(mySurfaceView);
+    }
+  ```
++ Cleanup in `onPause()`
+
+  ```java
+    @Override
+    protected void onPause() {
+      super.onPause();
+
+      // Cleanup in onPause()
+      // --------------------
+      qrEader.releaseAndCleanup();
+    }
+  ```
++ Some provided utility functions which you can use
+  + To check if the camera is running
+
+    ```java
+    boolean isCameraRunning = qrEader.isCameraRunning()
+    ```
+
+  + To stop `QREader`
+
+      ```java
+      qrEader.stop();
+      ```
+  + To start `QREader`
+
+      ```java
+      qrEader.start();
+      ```
+
+  > ##### Check the included sample app for a working example.
 
 # Pull Requests
 I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request. Here are some basic rules to follow to ensure timely addition of your request:
