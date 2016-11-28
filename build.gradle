@@ -49,8 +49,8 @@ ext {
   playServicesVersion = '10.0.0'
 
   // Library Info
-  libVersionCode = 7
-  libVersionName = '1.0.6'
+  libVersionCode = 8
+  libVersionName = '2.0.0'
   libPomUrl = 'https://github.com/nisrulz/qreader'
   libGithubRepo = 'nisrulz/qreader'
 
