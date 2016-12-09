@@ -5,7 +5,8 @@
 [![API](https://img.shields.io/badge/API-9%2B-orange.svg?style=flat)](https://android-arsenal.com/api?level=9)
 
 ### Badges/Featured In
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true)](https://android-arsenal.com/details/1/3478) 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true)](https://android-arsenal.com/details/1/3478)  [![AndroidDev Digest](https://img.shields.io/badge/AndroidDev%20Digest-%23121-blue.svg)](https://www.androiddevdigest.com/digest-121/)
+
 
 ### Show some :heart:
 [![GitHub stars](https://img.shields.io/github/stars/nisrulz/qreader.svg?style=social&label=Star)](https://github.com/nisrulz/qreader) [![GitHub forks](https://img.shields.io/github/forks/nisrulz/qreader.svg?style=social&label=Fork)](https://github.com/nisrulz/qreader/fork) [![GitHub watchers](https://img.shields.io/github/watchers/nisrulz/qreader.svg?style=social&label=Watch)](https://github.com/nisrulz/qreader) [![GitHub followers](https://img.shields.io/github/followers/nisrulz.svg?style=social&label=Follow)](https://github.com/nisrulz/qreader)
