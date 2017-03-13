@@ -21,7 +21,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.2'
+    classpath 'com.android.tools.build:gradle:2.3.0'
 
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
@@ -45,12 +45,12 @@ task clean(type: Delete) {
 
 ext {
   //Other
-  supportLibVersion = '25.0.1'
+  supportLibVersion = '25.2.0'
   playServicesVersion = '10.0.1'
 
   // Library Info
-  libVersionCode = 9
-  libVersionName = '2.0.1'
+  libVersionCode = 10
+  libVersionName = '2.1.0'
   libPomUrl = 'https://github.com/nisrulz/qreader'
   libGithubRepo = 'nisrulz/qreader'
 
