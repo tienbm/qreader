@@ -14,18 +14,20 @@
   ~ limitations under the License.
   -->
 
-<manifest package="github.nisrulz.qreader"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="github.nisrulz.qreader">
 
 
-    <!-- Required permission for reading -->
-    <uses-permission android:name="android.permission.CAMERA" />
+  <!-- Required permission for reading -->
+  <uses-permission android:name="android.permission.CAMERA"/>
 
-    <application>
+  <application>
 
-        <!-- Add this to enable bar code reader -->
-        <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode"/>
+    <!-- Add this to enable bar code reader -->
+    <meta-data
+        android:name="com.google.android.gms.vision.DEPENDENCIES"
+        android:value="barcode"/>
 
-    </application>
+  </application>
 
 </manifest>

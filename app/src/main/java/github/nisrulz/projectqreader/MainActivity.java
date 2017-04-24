@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-
     // Setup SurfaceView
     // -----------------
     mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
@@ -95,20 +94,20 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
-
-    // Init and Start with SurfaceView
-    // -------------------------------
-    qrEader.initAndStart(mySurfaceView);
-  }
-
-  @Override
   protected void onPause() {
     super.onPause();
 
     // Cleanup in onPause()
     // --------------------
     qrEader.releaseAndCleanup();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+
+    // Init and Start with SurfaceView
+    // -------------------------------
+    qrEader.initAndStart(mySurfaceView);
   }
 }

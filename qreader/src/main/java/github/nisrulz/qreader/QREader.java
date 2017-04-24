@@ -38,10 +38,6 @@ import java.io.IOException;
  * QREader Singleton.
  */
 public class QREader {
-  private final String LOGTAG = getClass().getSimpleName();
-  private CameraSource cameraSource = null;
-  private BarcodeDetector barcodeDetector = null;
-
   /**
    * The constant FRONT_CAM.
    */
@@ -50,43 +46,20 @@ public class QREader {
    * The constant BACK_CAM.
    */
   public static final int BACK_CAM = CameraSource.CAMERA_FACING_BACK;
-
+  private final String LOGTAG = getClass().getSimpleName();
   private final int width;
   private final int height;
   private final int facing;
   private final QRDataListener qrDataListener;
   private final Context context;
   private final SurfaceView surfaceView;
+  private CameraSource cameraSource = null;
+  private BarcodeDetector barcodeDetector = null;
   private boolean autoFocusEnabled;
 
   private boolean cameraRunning = false;
 
   private boolean surfaceCreated = false;
-
-  public void initAndStart(final SurfaceView surfaceView) {
-
-    surfaceView.getViewTreeObserver()
-        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override
-          public void onGlobalLayout() {
-            init();
-            start();
-            removeOnGlobalLayoutListener(surfaceView, this);
-          }
-        });
-  }
-
-  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-  private static void removeOnGlobalLayoutListener(View v,
-      ViewTreeObserver.OnGlobalLayoutListener listener) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-      v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
-    }
-    else {
-      v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
-    }
-  }
-
   private final SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -135,13 +108,17 @@ public class QREader {
     }
   }
 
-  /**
-   * Is camera running boolean.
-   *
-   * @return the boolean
-   */
-  public boolean isCameraRunning() {
-    return cameraRunning;
+  public void initAndStart(final SurfaceView surfaceView) {
+
+    surfaceView.getViewTreeObserver()
+        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+          @Override
+          public void onGlobalLayout() {
+            init();
+            start();
+            removeOnGlobalLayoutListener(surfaceView, this);
+          }
+        });
   }
 
   /**
@@ -205,6 +182,31 @@ public class QREader {
     }
   }
 
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+  private static void removeOnGlobalLayoutListener(View v,
+      ViewTreeObserver.OnGlobalLayoutListener listener) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+      v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+    }
+    else {
+      v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+    }
+  }
+
+  private boolean hasAutofocus(Context context) {
+    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+  }
+
+  private boolean hasCameraHardware(Context context) {
+    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+  }
+
+  private boolean checkCameraPermission(Context context) {
+    String permission = Manifest.permission.CAMERA;
+    int res = context.checkCallingOrSelfPermission(permission);
+    return res == PackageManager.PERMISSION_GRANTED;
+  }
+
   private void startCameraView(Context context, CameraSource cameraSource,
       SurfaceView surfaceView) {
     if (cameraRunning) {
@@ -226,6 +228,27 @@ public class QREader {
   }
 
   /**
+   * Is camera running boolean.
+   *
+   * @return the boolean
+   */
+  public boolean isCameraRunning() {
+    return cameraRunning;
+  }
+
+  /**
+   * Release and cleanup QREader.
+   */
+  public void releaseAndCleanup() {
+    stop();
+    if (cameraSource != null) {
+      //release camera and barcode detector(will invoke inside) resources
+      cameraSource.release();
+      cameraSource = null;
+    }
+  }
+
+  /**
    * Stop camera
    */
   public void stop() {
@@ -241,42 +264,16 @@ public class QREader {
   }
 
   /**
-   * Release and cleanup QREader.
-   */
-  public void releaseAndCleanup() {
-    stop();
-    if (cameraSource != null) {
-      //release camera and barcode detector(will invoke inside) resources
-      cameraSource.release();
-      cameraSource = null;
-    }
-  }
-
-  private boolean checkCameraPermission(Context context) {
-    String permission = Manifest.permission.CAMERA;
-    int res = context.checkCallingOrSelfPermission(permission);
-    return res == PackageManager.PERMISSION_GRANTED;
-  }
-
-  private boolean hasCameraHardware(Context context) {
-    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-  }
-
-  private boolean hasAutofocus(Context context) {
-    return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
-  }
-
-  /**
    * The type Builder.
    */
   public static class Builder {
+    private final QRDataListener qrDataListener;
+    private final Context context;
+    private final SurfaceView surfaceView;
     private boolean autofocusEnabled;
     private int width;
     private int height;
     private int facing;
-    private final QRDataListener qrDataListener;
-    private final Context context;
-    private final SurfaceView surfaceView;
     private BarcodeDetector barcodeDetector;
 
     /**
