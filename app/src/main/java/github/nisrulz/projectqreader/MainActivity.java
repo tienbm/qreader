@@ -16,8 +16,10 @@
 
 package github.nisrulz.projectqreader;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -28,6 +30,9 @@ import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String cameraPerm = Manifest.permission.CAMERA;
+
   // UI
   private TextView text;
 
@@ -35,14 +40,17 @@ public class MainActivity extends AppCompatActivity {
   private SurfaceView mySurfaceView;
   private QREader qrEader;
 
+  boolean hasCameraPermission = false;
+
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    hasCameraPermission = RuntimePermissionUtil.checkPermissonGranted(this, cameraPerm);
 
-    text = (TextView) findViewById(R.id.code_info);
+    text = findViewById(R.id.code_info);
 
-    final Button stateBtn = (Button) findViewById(R.id.btn_start_stop);
+    final Button stateBtn = findViewById(R.id.btn_start_stop);
     // change of reader state in dynamic
     stateBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -50,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         if (qrEader.isCameraRunning()) {
           stateBtn.setText("Start QREader");
           qrEader.stop();
-        }
-        else {
+        } else {
           stateBtn.setText("Stop QREader");
           qrEader.start();
         }
@@ -60,19 +67,32 @@ public class MainActivity extends AppCompatActivity {
 
     stateBtn.setVisibility(View.VISIBLE);
 
-    Button restartbtn = (Button) findViewById(R.id.btn_restart_activity);
+    Button restartbtn = findViewById(R.id.btn_restart_activity);
     restartbtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        startActivity(new Intent(MainActivity.this, MainActivity.class));
-        finish();
+        restartActivity();
       }
     });
 
     // Setup SurfaceView
     // -----------------
-    mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
+    mySurfaceView = findViewById(R.id.camera_view);
 
+    if (hasCameraPermission) {
+      // Setup QREader
+      setupQREader();
+    } else {
+      RuntimePermissionUtil.requestPermission(MainActivity.this, cameraPerm, 100);
+    }
+  }
+
+  void restartActivity() {
+    startActivity(new Intent(MainActivity.this, MainActivity.class));
+    finish();
+  }
+
+  void setupQREader() {
     // Init QREader
     // ------------
     qrEader = new QREader.Builder(this, mySurfaceView, new QRDataListener() {
@@ -97,17 +117,43 @@ public class MainActivity extends AppCompatActivity {
   protected void onPause() {
     super.onPause();
 
-    // Cleanup in onPause()
-    // --------------------
-    qrEader.releaseAndCleanup();
+    if (hasCameraPermission) {
+
+      // Cleanup in onPause()
+      // --------------------
+      qrEader.releaseAndCleanup();
+    }
   }
 
   @Override
   protected void onResume() {
     super.onResume();
 
-    // Init and Start with SurfaceView
-    // -------------------------------
-    qrEader.initAndStart(mySurfaceView);
+    if (hasCameraPermission) {
+
+      // Init and Start with SurfaceView
+      // -------------------------------
+      qrEader.initAndStart(mySurfaceView);
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
+      @NonNull final int[] grantResults) {
+    if (requestCode == 100) {
+      RuntimePermissionUtil.onRequestPermissionsResult(grantResults, new RPResultListener() {
+        @Override
+        public void onPermissionGranted() {
+          if ( RuntimePermissionUtil.checkPermissonGranted(MainActivity.this, cameraPerm)) {
+            restartActivity();
+          }
+        }
+
+        @Override
+        public void onPermissionDenied() {
+          // do nothing
+        }
+      });
+    }
   }
 }
