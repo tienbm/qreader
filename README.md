@@ -15,14 +15,26 @@ Android library which makes use of Google's Mobile Vision API to enable reading 
 
 The library is built for simplicity and ease of use. It not only eliminates most boilerplate code for dealing with setting up QR Code reading , but also provides an easy and simple API to retrieve information from QR Code quickly.
 
+> Requires Google Play Services
+
 # Changelog
 Starting with `1.0.4`, Changes exist in the [releases tab](https://github.com/nisrulz/qreader/releases).
 
 #Integration
 QREader is available in the Jcenter, so getting it as simple as adding it as a dependency
-```gradle
-compile 'com.github.nisrulz:qreader:{latest version}'
-```
+
+- For gradle version < 4.0
+
+    ```gradle
+    compile 'com.github.nisrulz:qreader:{latest version}'
+    ```
+
+- For gradle 4.0+
+
+    ```gradle
+    implementation 'com.github.nisrulz:qreader:{latest version}'
+    ```
+
 where `{latest version}` corresponds to published version in [ ![Download](https://api.bintray.com/packages/nisrulz/maven/com.github.nisrulz%3Aqreader/images/download.svg) ](https://bintray.com/nisrulz/maven/com.github.nisrulz%3Aqreader/_latestVersion)
 
 

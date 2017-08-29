@@ -22,14 +22,14 @@ buildscript {
     google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.0.0-beta2'
+    classpath 'com.android.tools.build:gradle:3.0.0-beta3'
 
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
 
     // Required plugins added to classpath to facilitate pushing to Jcenter/Bintray
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-    classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
   }
 }
 
@@ -55,8 +55,8 @@ ext {
   playServicesVersion = '11.2.0'
 
   // Library Info
-  libVersionCode = 10
-  libVersionName = '2.1.0'
+  libVersionCode = 11
+  libVersionName = '2.1.1'
   libPomUrl = 'https://github.com/nisrulz/qreader'
   libGithubRepo = 'nisrulz/qreader'
 
