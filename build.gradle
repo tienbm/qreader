@@ -22,7 +22,7 @@ buildscript {
     google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.0.0-beta3'
+    classpath 'com.android.tools.build:gradle:3.0.0-rc2'
 
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
@@ -50,9 +50,9 @@ ext {
   targetSdkVersion = 26
   minSdkVersion = 14
   compileSdkVersion = targetSdkVersion
-  buildToolsVersion = '26.0.1'
-  supportLibVersion = '26.0.1'
-  playServicesVersion = '11.2.0'
+  buildToolsVersion = '26.0.2'
+  supportLibVersion = '26.1.0'
+  playServicesVersion = '11.4.2'
 
   // Library Info
   libVersionCode = 11
