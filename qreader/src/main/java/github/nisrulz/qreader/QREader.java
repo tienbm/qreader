@@ -17,18 +17,15 @@
 package github.nisrulz.qreader;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -167,6 +164,8 @@ public class QREader {
 
     private final String LOGTAG = getClass().getSimpleName();
 
+    private final Utils utils = new Utils();
+
     private boolean autoFocusEnabled;
 
     private BarcodeDetector barcodeDetector = null;
@@ -237,14 +236,13 @@ public class QREader {
     }
 
     public void initAndStart(final SurfaceView surfaceView) {
-
         surfaceView.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         init();
                         start();
-                        removeOnGlobalLayoutListener(surfaceView, this);
+                        utils.removeOnGlobalLayoutListener(surfaceView, this);
                     }
                 });
     }
@@ -300,34 +298,20 @@ public class QREader {
         }
     }
 
-    private boolean checkCameraPermission(Context context) {
-        String permission = Manifest.permission.CAMERA;
-        int res = context.checkCallingOrSelfPermission(permission);
-        return res == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private boolean hasAutofocus(Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
-    }
-
-    private boolean hasCameraHardware(Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-    }
-
     /**
      * Init.
      */
     private void init() {
-        if (!hasAutofocus(context)) {
+        if (!utils.hasAutofocus(context)) {
             Log.e(LOGTAG, "Do not have autofocus feature, disabling autofocus feature in the library!");
             autoFocusEnabled = false;
         }
 
-        if (!hasCameraHardware(context)) {
+        if (!utils.hasCameraHardware(context)) {
             Log.e(LOGTAG, "Does not have camera hardware!");
             return;
         }
-        if (!checkCameraPermission(context)) {
+        if (!utils.checkCameraPermission(context)) {
             Log.e(LOGTAG, "Do not have camera permission!");
             return;
         }
@@ -348,11 +332,7 @@ public class QREader {
                 }
             });
 
-            cameraSource =
-                    new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
-                            .setFacing(facing)
-                            .setRequestedPreviewSize(width, height)
-                            .build();
+            cameraSource = getCameraSource();
         } else {
             Log.e(LOGTAG, "Barcode recognition libs are not downloaded and are not operational");
         }
@@ -377,16 +357,6 @@ public class QREader {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private static void removeOnGlobalLayoutListener(View v,
-            ViewTreeObserver.OnGlobalLayoutListener listener) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
-        } else {
-            v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
-        }
-    }
-
 
     public void readFromBitmap(Bitmap bitmap) {
         if (!barcodeDetector.isOperational()) {
@@ -396,13 +366,26 @@ public class QREader {
             try {
                 Frame frame = new Frame.Builder().setBitmap(bitmap).build();
                 SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
-                Barcode thisCode = barcodes.valueAt(0);
-                qrDataListener.onDetected(thisCode.rawValue);
+                if (barcodes.size() != 0 && qrDataListener != null) {
+                    qrDataListener.onDetected(barcodes.valueAt(0).rawValue);
+                }
             } catch (Exception e) {
                 qrDataListener.onReadQrError(e);
             }
         }
 
+    }
+
+
+    private CameraSource getCameraSource() {
+        if (cameraSource == null) {
+            cameraSource =
+                    new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
+                            .setFacing(facing)
+                            .setRequestedPreviewSize(width, height)
+                            .build();
+        }
+        return cameraSource;
     }
 
 
