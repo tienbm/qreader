@@ -20,6 +20,8 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -30,6 +32,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
@@ -56,7 +59,7 @@ public class QREader {
 
         private final QRDataListener qrDataListener;
 
-        private final SurfaceView surfaceView;
+        private SurfaceView surfaceView;
 
         private int width;
 
@@ -64,17 +67,16 @@ public class QREader {
          * Instantiates a new Builder.
          *
          * @param context        the context
-         * @param surfaceView    the surface view
          * @param qrDataListener the qr data listener
          */
-        public Builder(Context context, SurfaceView surfaceView, QRDataListener qrDataListener) {
+        public Builder(Context context, QRDataListener qrDataListener) {
             this.autofocusEnabled = true;
             this.width = 800;
             this.height = 800;
             this.facing = BACK_CAM;
             this.qrDataListener = qrDataListener;
             this.context = context;
-            this.surfaceView = surfaceView;
+            this.surfaceView = null;
         }
 
         /**
@@ -141,6 +143,13 @@ public class QREader {
         public Builder width(int width) {
             if (width != 0) {
                 this.width = width;
+            }
+            return this;
+        }
+
+        public Builder surfaceView(SurfaceView surfaceView) {
+            if (surfaceView != null) {
+                this.surfaceView = surfaceView;
             }
             return this;
         }
@@ -211,11 +220,6 @@ public class QREader {
      *
      * @param builder the builder
      */
-/*
-   * Instantiates a new QREader
-   *
-   * @param builder the builder
-   */
     private QREader(final Builder builder) {
         this.autoFocusEnabled = builder.autofocusEnabled;
         this.width = builder.width;
@@ -381,6 +385,29 @@ public class QREader {
         } else {
             v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
         }
+    }
+
+
+    public void readFromBitmap(Bitmap bitmap) {
+        if (!barcodeDetector.isOperational()) {
+            Log.d(LOGTAG, "Could not set up the detector!");
+            return;
+        } else {
+            try {
+                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
+                Barcode thisCode = barcodes.valueAt(0);
+                qrDataListener.onDetected(thisCode.rawValue);
+            } catch (Exception e) {
+                qrDataListener.onReadQrError(e);
+            }
+        }
+
+    }
+
+
+    public Bitmap getBitmapFromDrawable(int resId) {
+        return BitmapFactory.decodeResource(context.getResources(), resId);
     }
 }
 

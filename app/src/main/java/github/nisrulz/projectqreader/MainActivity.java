@@ -18,6 +18,7 @@ package github.nisrulz.projectqreader;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -83,7 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (hasCameraPermission) {
             // Setup QREader
-            setupQREader();
+            // setupQREader();
+            readQRCodeFromDrawable(R.drawable.img_qrcode);
+
+
         } else {
             RuntimePermissionUtil.requestPermission(MainActivity.this, cameraPerm, 100);
         }
@@ -138,10 +142,33 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    void readQRCodeFromDrawable(int resID) {
+        qrEader = new QREader.Builder(this, new QRDataListener() {
+            @Override
+            public void onDetected(final String data) {
+                Log.d("QREader", "Value : " + data);
+                text.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        text.setText(data);
+                    }
+                });
+            }
+
+            @Override
+            public void onReadQrError(final Exception exception) {
+                Toast.makeText(MainActivity.this, exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).build();
+
+        Bitmap bitmap = qrEader.getBitmapFromDrawable(resID);
+        qrEader.readFromBitmap(bitmap);
+    }
+
     void setupQREader() {
         // Init QREader
         // ------------
-        qrEader = new QREader.Builder(this, mySurfaceView, new QRDataListener() {
+        qrEader = new QREader.Builder(this, new QRDataListener() {
             @Override
             public void onDetected(final String data) {
                 Log.d("QREader", "Value : " + data);
@@ -162,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 .enableAutofocus(true)
                 .height(mySurfaceView.getHeight())
                 .width(mySurfaceView.getWidth())
+                .surfaceView(mySurfaceView)
                 .build();
     }
 }
