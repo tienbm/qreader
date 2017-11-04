@@ -1,26 +1,77 @@
-![Image](img/github_banner.png)
+<div align="center">
+  <img src="img/github_banner.png" />
+</div>
+<h1 align="center"><a href="https://twitter.com/intent/tweet?text=Checkout%20QREader%3A%20Android%20lib%20with%20simplified%20and%20instant%20QR%20code%20reading%20capabilities%F0%9F%98%8E&url=https://github.com/nisrulz/qreader&via=nisrulz&hashtags=AndroidDev">
+        <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social"/>
+    </a></h1>
 
-### Specs
-[![API](https://img.shields.io/badge/API-14%2B-orange.svg?style=flat)](https://android-arsenal.com/api?level=14)
+<div align="center">
+  <strong>Android library which makes use of Google's Mobile Vision API to enable reading QR Code.</strong>
+  <p>The library is built for simplicity and ease of use. It not only eliminates most boilerplate code for dealing with setting up QR Code reading , but also provides an easy and simple API to retrieve information from QR Code quickly.</p>
+</div>
+<br/>
+<div align="center">
+    <!-- Bintray -->
+    <a href="https://bintray.com/nisrulz/maven/com.github.nisrulz%3Aqreader/_latestVersion">
+        <img src="https://api.bintray.com/packages/nisrulz/maven/com.github.nisrulz%3Aqreader/images/download.svg"/>
+    </a>
+    <!-- API -->
+    <a href="https://android-arsenal.com/api?level=14">
+        <img src="https://img.shields.io/badge/API-14%2B-orange.svg?style=flat"/>
+    </a>
+    <!-- Android Arsenal -->
+    <a href="https://android-arsenal.com/details/1/3478">
+        <img src="https://img.shields.io/badge/Android%20Arsenal-qreader-brightgreen.svg?style=flat"/>
+    </a>
+     <!-- Android Dev Digest -->
+    <a href="https://www.androiddevdigest.com/digest-121/">
+        <img src="https://img.shields.io/badge/AndroidDev%20Digest-%23121-blue.svg"/>
+    </a>
+    <!-- GitHub stars -->
+    <a href="https://github.com/nisrulz/qreader">
+        <img src="https://img.shields.io/github/stars/nisrulz/qreader.svg?style=social&label=Star"/>
+    </a>
+    <!-- GitHub forks -->
+    <a href="https://github.com/nisrulz/qreader/fork">
+        <img src="hhttps://img.shields.io/github/forks/nisrulz/qreader.svg?style=social&label=Fork"/>
+    </a>
+    <!-- GitHub watchers -->
+    <a href="https://github.com/nisrulz/qreader">
+        <img src="https://img.shields.io/github/watchers/nisrulz/qreader.svg?style=social&label=Watch"/>
+    </a>
+    <!-- Say Thanks! -->
+    <a href="https://saythanks.io/to/nisrulz">
+        <img src="https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg"/>
+    </a>
+    <a href="https://www.paypal.me/nisrulz/5">
+        <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
+    </a>
+    <br/>
+     <!-- GitHub followers -->
+    <a href="https://github.com/nisrulz/qreader">
+        <img src="https://img.shields.io/github/followers/nisrulz.svg?style=social&label=Follow%20@nisrulz"/>
+    </a>
+    <!-- Twitter Follow -->
+    <a href="https://twitter.com/nisrulz">
+        <img src="https://img.shields.io/twitter/follow/nisrulz.svg?style=social"/>
+    </a>
+</div>
 
-### Badges/Featured In
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QREader-green.svg?style=true)](https://android-arsenal.com/details/1/3478)  [![AndroidDev Digest](https://img.shields.io/badge/AndroidDev%20Digest-%23121-blue.svg)](https://www.androiddevdigest.com/digest-121/)
+<div align="center">
+  <sub>Built with ❤︎ by
+  <a href="https://twitter.com/nisrulz">Nishant Srivastava</a> and
+  <a href="https://github.com/nisrulz/qreader/graphs/contributors">
+    contributors
+  </a>
+</div>
+<br/>
+<br/>
 
-
-### Show some :heart:
-[![GitHub stars](https://img.shields.io/github/stars/nisrulz/qreader.svg?style=social&label=Star)](https://github.com/nisrulz/qreader) [![GitHub forks](https://img.shields.io/github/forks/nisrulz/qreader.svg?style=social&label=Fork)](https://github.com/nisrulz/qreader/fork) [![GitHub watchers](https://img.shields.io/github/watchers/nisrulz/qreader.svg?style=social&label=Watch)](https://github.com/nisrulz/qreader) [![GitHub followers](https://img.shields.io/github/followers/nisrulz.svg?style=social&label=Follow)](https://github.com/nisrulz/qreader)
-[![Twitter Follow](https://img.shields.io/twitter/follow/nisrulz.svg?style=social)](https://twitter.com/nisrulz)
-
-Android library which makes use of Google's Mobile Vision API to enable reading QR Code.
-
-The library is built for simplicity and ease of use. It not only eliminates most boilerplate code for dealing with setting up QR Code reading , but also provides an easy and simple API to retrieve information from QR Code quickly.
-
-> Requires Google Play Services
 
 # Changelog
 Starting with `1.0.4`, Changes exist in the [releases tab](https://github.com/nisrulz/qreader/releases).
 
-#Integration
+# Integration
 QREader is available in the Jcenter, so getting it as simple as adding it as a dependency
 
 - For gradle version < 4.0
@@ -37,6 +88,8 @@ QREader is available in the Jcenter, so getting it as simple as adding it as a d
 
 where `{latest version}` corresponds to published version in [ ![Download](https://api.bintray.com/packages/nisrulz/maven/com.github.nisrulz%3Aqreader/images/download.svg) ](https://bintray.com/nisrulz/maven/com.github.nisrulz%3Aqreader/_latestVersion)
 
+> Requires Google Play Services
+
 
 # Usage Docs
 
@@ -44,99 +97,96 @@ where `{latest version}` corresponds to published version in [ ![Download](https
 
 1. Add a `SurfaceView` to your layout
 
-  ```xml
-  <SurfaceView
-    android:id="@+id/camera_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/info"
-    />
-  ```
+    ```xml
+    <SurfaceView
+      android:id="@+id/camera_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+    ```
 
 1. Setup `SurfaceView` and `QREader` in `onCreate()`
 
-  ```java
-  // QREader
-  private SurfaceView mySurfaceView;
-  private QREader qrEader;
-  ..
-
-  @Override
-  protected void onCreate(final Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    ..
+    ```java
+    // QREader
+    private SurfaceView mySurfaceView;
+    private QREader qrEader;
     ..
 
-    // Setup SurfaceView
-    // -----------------
-    mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+      ..
+      ..
 
-    // Init QREader
-    // ------------
-    qrEader = new QREader.Builder(this, mySurfaceView, new QRDataListener() {
-      @Override
-      public void onDetected(final String data) {
-        Log.d("QREader", "Value : " + data);
-        text.post(new Runnable() {
-          @Override
-          public void run() {
-            text.setText(data);
-          }
-        });
-      }
-    }).facing(QREader.BACK_CAM)
-        .enableAutofocus(true)
-        .height(mySurfaceView.getHeight())
-        .width(mySurfaceView.getWidth())
-        .build();
+      // Setup SurfaceView
+      // -----------------
+      mySurfaceView = (SurfaceView) findViewById(R.id.camera_view);
 
-  }
-  ```
+      // Init QREader
+      // ------------
+      qrEader = new QREader.Builder(this, mySurfaceView, new QRDataListener() {
+            @Override
+            public void onDetected(final String data) {
+                Log.d("QREader", "Value : " + data);
+            }
+
+            @Override
+            public void onReadQrError(final Exception exception) {
+                Toast.makeText(MainActivity.this, "Cannot open camera", Toast.LENGTH_LONG).show();
+            }
+        }).facing(QREader.BACK_CAM)
+                .enableAutofocus(true)
+                .height(mySurfaceView.getHeight())
+                .width(mySurfaceView.getWidth())
+                .build();
+
+    }
+    ```
 
 1. Initialize and Start in `onResume()`
 
-  ```java
-    @Override
-    protected void onResume() {
-      super.onResume();
+    ```java
+      @Override
+      protected void onResume() {
+        super.onResume();
 
-      // Init and Start with SurfaceView
-      // -------------------------------
-      qrEader.initAndStart(mySurfaceView);
-    }
-  ```
+        // Init and Start with SurfaceView
+        // -------------------------------
+        qrEader.initAndStart(mySurfaceView);
+      }
+    ```
 1. Cleanup in `onPause()`
 
-  ```java
-    @Override
-    protected void onPause() {
-      super.onPause();
+    ```java
+      @Override
+      protected void onPause() {
+        super.onPause();
 
-      // Cleanup in onPause()
-      // --------------------
-      qrEader.releaseAndCleanup();
-    }
-  ```
-1. Some provided utility functions which you can use
-  + To check if the camera is running
+        // Cleanup in onPause()
+        // --------------------
+        qrEader.releaseAndCleanup();
+      }
+    ```
+#### Some provided utility functions which you can use
++ To check if the camera is running
 
     ```java
     boolean isCameraRunning = qrEader.isCameraRunning()
     ```
 
-  + To stop `QREader`
++ To stop `QREader`
 
-      ```java
-      qrEader.stop();
-      ```
-  + To start `QREader`
+    ```java
+    qrEader.stop();
+    ```
++ To start `QREader`
 
-      ```java
-      qrEader.start();
-      ```
-
-  > ##### Check the included sample app for a working example.
+    ```java
+    qrEader.start();
+    ```
+> ##### Check the included sample app for a working example.
 
 # Pull Requests
 I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request. Here are some basic rules to follow to ensure timely addition of your request:
@@ -147,9 +197,31 @@ I welcome and encourage all pull requests. It usually will take me within 24-48 
   5. Check for existing [issues](https://github.com/nisrulz/qreader/issues) first, before filing an issue.  
   6. Have fun!
 
-### Created & Maintained By
+### Created & Maintained By :sunglasses:
 [Nishant Srivastava](https://github.com/nisrulz/nisrulz.github.io) ([@nisrulz](https://www.twitter.com/nisrulz))
 
-> If you found this library helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
+> If you appreciate my work, please consider buying me a cup of :coffee:
 >  + [PayPal](https://www.paypal.me/nisrulz/5)
 >  + Bitcoin Address: 13PjuJcfVW2Ad81fawqwLtku4bZLv1AxCL
+
+### Contributors :metal:
+Checkout the [list of awesome contributors](https://github.com/nisrulz/qreader/graphs/contributors) of this project
+
+License
+=======
+
+    Copyright 2016 Nishant Srivastava
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+<img src="http://forthebadge.com/images/badges/built-for-android.svg" />
