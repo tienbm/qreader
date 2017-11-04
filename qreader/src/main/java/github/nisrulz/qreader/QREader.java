@@ -362,9 +362,11 @@ public class QREader {
      *
      * @param barcodeDetector
      *     the barcode detector
+     * @return the builder
      */
-    public void barcodeDetector(BarcodeDetector barcodeDetector) {
+    public Builder barcodeDetector(BarcodeDetector barcodeDetector) {
       this.barcodeDetector = barcodeDetector;
+      return this;
     }
   }
 }
