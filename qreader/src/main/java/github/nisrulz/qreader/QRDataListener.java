@@ -29,4 +29,8 @@ public interface QRDataListener {
    */
   // Called from not main thread. Be careful
   void onDetected(final String data);
+
+  // Called on the main thread
+  void onReadQrError(final Exception exception);
+
 }

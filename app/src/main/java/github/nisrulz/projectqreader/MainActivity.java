@@ -26,6 +26,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
@@ -105,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
             text.setText(data);
           }
         });
+      }
+
+      @Override
+      public void onReadQrError(final Exception exception) {
+        Toast.makeText(MainActivity.this, "Cannot open camera", Toast.LENGTH_LONG).show();
+
       }
     }).facing(QREader.BACK_CAM)
         .enableAutofocus(true)
