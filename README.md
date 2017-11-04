@@ -88,7 +88,7 @@ QREader is available in the Jcenter, so getting it as simple as adding it as a d
 
 where `{latest version}` corresponds to published version in [ ![Download](https://api.bintray.com/packages/nisrulz/maven/com.github.nisrulz%3Aqreader/images/download.svg) ](https://bintray.com/nisrulz/maven/com.github.nisrulz%3Aqreader/_latestVersion)
 
-> Requires Google Play Services
+> Requires Google Play Services i.e it works on devices which have Google Play Store installed
 
 
 # Usage Docs
