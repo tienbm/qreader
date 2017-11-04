@@ -17,28 +17,28 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode rootProject.ext.libVersionCode
-    versionName rootProject.ext.libVersionName
-    consumerProguardFiles 'consumer-proguard-rules.pro'
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.libVersionCode
+        versionName rootProject.ext.libVersionName
+        consumerProguardFiles 'consumer-proguard-rules.pro'
     }
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
-  testImplementation 'junit:junit:4.12'
-  // Add Vision API
-  implementation "com.google.android.gms:play-services-vision:$rootProject.ext.playServicesVersion"
+    testImplementation 'junit:junit:4.12'
+    // Add Vision API
+    implementation "com.google.android.gms:play-services-vision:$rootProject.ext.playServicesVersion"
 }
 
 apply from: 'https://raw.githubusercontent.com/nisrulz/JCenter/master/nishant-config.gradle'

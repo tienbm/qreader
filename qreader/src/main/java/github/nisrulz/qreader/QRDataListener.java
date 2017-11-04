@@ -21,16 +21,15 @@ package github.nisrulz.qreader;
  */
 public interface QRDataListener {
 
-  /**
-   * On detected.
-   *
-   * @param data
-   *     the data
-   */
-  // Called from not main thread. Be careful
-  void onDetected(final String data);
+    /**
+     * On detected.
+     *
+     * @param data the data
+     */
+    // Called from not main thread. Be careful
+    void onDetected(final String data);
 
-  // Called on the main thread
-  void onReadQrError(final Exception exception);
+    // Called on the main thread
+    void onReadQrError(final Exception exception);
 
 }
