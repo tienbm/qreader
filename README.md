@@ -77,7 +77,7 @@ QREader is available in the Jcenter, so getting it as simple as adding it as a d
 - For gradle version < 4.0
 
     ```gradle
-    compile 'com.github.nisrulz:qreader:{latest version}'
+    implementation 'com.github.nisrulz:qreader:{latest version}'
     ```
 
 - For gradle 4.0+
