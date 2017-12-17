@@ -131,6 +131,13 @@ public class QREader {
             return this;
         }
 
+        public Builder surfaceView(SurfaceView surfaceView) {
+            if (surfaceView != null) {
+                this.surfaceView = surfaceView;
+            }
+            return this;
+        }
+
         /**
          * Width builder.
          *
@@ -140,13 +147,6 @@ public class QREader {
         public Builder width(int width) {
             if (width != 0) {
                 this.width = width;
-            }
-            return this;
-        }
-
-        public Builder surfaceView(SurfaceView surfaceView) {
-            if (surfaceView != null) {
-                this.surfaceView = surfaceView;
             }
             return this;
         }
@@ -163,8 +163,6 @@ public class QREader {
     public static final int BACK_CAM = CameraSource.CAMERA_FACING_BACK;
 
     private final String LOGTAG = getClass().getSimpleName();
-
-    private final Utils utils = new Utils();
 
     private boolean autoFocusEnabled;
 
@@ -212,6 +210,8 @@ public class QREader {
         }
     };
 
+    private final Utils utils = new Utils();
+
     private final int width;
 
     /**
@@ -235,16 +235,20 @@ public class QREader {
         }
     }
 
+    public Bitmap getBitmapFromDrawable(int resId) {
+        return BitmapFactory.decodeResource(context.getResources(), resId);
+    }
+
     public void initAndStart(final SurfaceView surfaceView) {
         surfaceView.getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        init();
-                        start();
-                        utils.removeOnGlobalLayoutListener(surfaceView, this);
-                    }
-                });
+            .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    init();
+                    start();
+                    utils.removeOnGlobalLayoutListener(surfaceView, this);
+                }
+            });
     }
 
     /**
@@ -254,6 +258,24 @@ public class QREader {
      */
     public boolean isCameraRunning() {
         return cameraRunning;
+    }
+
+    public void readFromBitmap(Bitmap bitmap) {
+        if (!barcodeDetector.isOperational()) {
+            Log.d(LOGTAG, "Could not set up the detector!");
+            return;
+        } else {
+            try {
+                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
+                if (barcodes.size() != 0 && qrDataListener != null) {
+                    qrDataListener.onDetected(barcodes.valueAt(0).rawValue);
+                }
+            } catch (Exception e) {
+                qrDataListener.onReadQrError(e);
+            }
+        }
+
     }
 
     /**
@@ -298,6 +320,17 @@ public class QREader {
         }
     }
 
+    private CameraSource getCameraSource() {
+        if (cameraSource == null) {
+            cameraSource =
+                new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
+                    .setFacing(facing)
+                    .setRequestedPreviewSize(width, height)
+                    .build();
+        }
+        return cameraSource;
+    }
+
     /**
      * Init.
      */
@@ -339,13 +372,13 @@ public class QREader {
     }
 
     private void startCameraView(Context context, CameraSource cameraSource,
-            SurfaceView surfaceView) {
+        SurfaceView surfaceView) {
         if (cameraRunning) {
             throw new IllegalStateException("Camera already started!");
         }
         try {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
                 Log.e(LOGTAG, "Permission not granted!");
             } else if (!cameraRunning && cameraSource != null && surfaceView != null) {
                 cameraSource.start(surfaceView.getHolder());
@@ -355,42 +388,6 @@ public class QREader {
             Log.e(LOGTAG, ie.getMessage());
             ie.printStackTrace();
         }
-    }
-
-
-    public void readFromBitmap(Bitmap bitmap) {
-        if (!barcodeDetector.isOperational()) {
-            Log.d(LOGTAG, "Could not set up the detector!");
-            return;
-        } else {
-            try {
-                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
-                if (barcodes.size() != 0 && qrDataListener != null) {
-                    qrDataListener.onDetected(barcodes.valueAt(0).rawValue);
-                }
-            } catch (Exception e) {
-                qrDataListener.onReadQrError(e);
-            }
-        }
-
-    }
-
-
-    private CameraSource getCameraSource() {
-        if (cameraSource == null) {
-            cameraSource =
-                    new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
-                            .setFacing(facing)
-                            .setRequestedPreviewSize(width, height)
-                            .build();
-        }
-        return cameraSource;
-    }
-
-
-    public Bitmap getBitmapFromDrawable(int resId) {
-        return BitmapFactory.decodeResource(context.getResources(), resId);
     }
 }
 

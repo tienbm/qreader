@@ -36,7 +36,7 @@ class BarcodeDetectorHolder {
     static BarcodeDetector getBarcodeDetector(Context context) {
         if (detector == null) {
             detector = new BarcodeDetector.Builder(context.getApplicationContext()).setBarcodeFormats(
-                    Barcode.QR_CODE).build();
+                Barcode.QR_CODE).build();
         }
         return detector;
     }

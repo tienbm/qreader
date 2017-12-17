@@ -26,10 +26,10 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:background="@android:color/background_dark"
         android:id="@+id/code_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/background_dark"
         android:padding="10dp"
         android:text="@string/intro_text"
         android:textColor="@android:color/white"

@@ -34,11 +34,11 @@ import github.nisrulz.qreader.QREader;
 public class MainActivity extends AppCompatActivity {
 
 
-    private Menu menu;
-
     private static final String cameraPerm = Manifest.permission.CAMERA;
 
     boolean hasCameraPermission = false;
+
+    private Menu menu;
 
     // QREader
     private SurfaceView mySurfaceView;
@@ -96,6 +96,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
+        @NonNull final int[] grantResults) {
+        if (requestCode == 100) {
+            RuntimePermissionUtil.onRequestPermissionsResult(grantResults, new RPResultListener() {
+                @Override
+                public void onPermissionDenied() {
+                    // do nothing
+                }
+
+                @Override
+                public void onPermissionGranted() {
+                    if (RuntimePermissionUtil.checkPermissonGranted(MainActivity.this, cameraPerm)) {
+                        restartActivity();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -122,26 +142,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
-            @NonNull final int[] grantResults) {
-        if (requestCode == 100) {
-            RuntimePermissionUtil.onRequestPermissionsResult(grantResults, new RPResultListener() {
-                @Override
-                public void onPermissionDenied() {
-                    // do nothing
-                }
-
-                @Override
-                public void onPermissionGranted() {
-                    if (RuntimePermissionUtil.checkPermissonGranted(MainActivity.this, cameraPerm)) {
-                        restartActivity();
-                    }
-                }
-            });
-        }
     }
 
     void readQRCodeFromDrawable(int resID) {
@@ -188,11 +188,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }).facing(QREader.BACK_CAM)
-                .enableAutofocus(true)
-                .height(mySurfaceView.getHeight())
-                .width(mySurfaceView.getWidth())
-                .surfaceView(mySurfaceView)
-                .build();
+            .enableAutofocus(true)
+            .height(mySurfaceView.getHeight())
+            .width(mySurfaceView.getWidth())
+            .surfaceView(mySurfaceView)
+            .build();
     }
 
     private void restartActivity() {
