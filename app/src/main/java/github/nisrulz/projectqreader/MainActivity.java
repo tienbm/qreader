@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
@@ -97,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
-                                           @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         if (requestCode == 100) {
             RuntimePermissionUtil.onRequestPermissionsResult(grantResults, new RPResultListener() {
                 @Override
