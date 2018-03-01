@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseArray;
@@ -33,6 +35,7 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * QREader Singleton.
@@ -183,6 +186,8 @@ public class QREader {
     private boolean surfaceCreated = false;
 
     private final SurfaceView surfaceView;
+
+    public static boolean flashMode = false;
 
     private final SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
         @Override
@@ -388,6 +393,69 @@ public class QREader {
             Log.e(LOGTAG, ie.getMessage());
             ie.printStackTrace();
         }
+    }
+
+    /**
+     * Turn Flash On
+     */
+    public void turnFlashOn() {
+
+        if (cameraSource == null)
+            return;
+
+        Camera camera = getCamera(cameraSource);
+        if (camera != null) {
+            try {
+                Camera.Parameters param = camera.getParameters();
+                param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                camera.setParameters(param);
+                flashMode = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Turn Flash Off
+     */
+    public void turnFlashOff() {
+
+        if (cameraSource == null)
+            return;
+
+        Camera camera = getCamera(cameraSource);
+        if (camera != null) {
+            try {
+                Camera.Parameters param = camera.getParameters();
+                param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(param);
+                flashMode = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static Camera getCamera(@NonNull CameraSource cameraSource) {
+        Field[] declaredFields = CameraSource.class.getDeclaredFields();
+
+        for (Field field : declaredFields) {
+            if (field.getType() == Camera.class) {
+                field.setAccessible(true);
+                try {
+                    Camera camera = (Camera) field.get(cameraSource);
+                    if (camera != null) {
+                        return camera;
+                    }
+                    return null;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        return null;
     }
 }
 
