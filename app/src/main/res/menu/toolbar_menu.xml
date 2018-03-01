@@ -29,4 +29,10 @@
         android:title="Restart Activity"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_flash"
+        android:icon="@drawable/img_flash_on"
+        android:title="Flash On"
+        app:showAsAction="always" />
+
 </menu>

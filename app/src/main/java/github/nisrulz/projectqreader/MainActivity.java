@@ -96,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
-        @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         if (requestCode == 100) {
             RuntimePermissionUtil.onRequestPermissionsResult(grantResults, new RPResultListener() {
                 @Override
@@ -138,6 +137,16 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menu_restart:
                 restartActivity();
+                break;
+
+            case R.id.menu_flash:
+                if (qrEader.flashMode) {
+                    qrEader.turnFlashOff();
+                    menu.findItem(item.getItemId()).setIcon(R.drawable.img_flash_on);
+                } else {
+                    qrEader.turnFlashOn();
+                    menu.findItem(item.getItemId()).setIcon(R.drawable.img_flash_off);
+                }
                 break;
         }
 
